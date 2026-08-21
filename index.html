@@ -34,19 +34,30 @@
 </head>
 <body class="text-gray-800">
 
+    <!-- Hamburger Menu Button (Mobile Only) -->
+    <button id="mobile-menu-btn" class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-py-dark text-white rounded-lg shadow-lg">
+        ☰
+    </button>
+
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="mobile-backdrop" class="lg:hidden fixed inset-0 bg-black/50 z-30 hidden" onclick="toggleMobileMenu()"></div>
+    
     <!-- Layout Wrapper -->
     <div class="flex h-screen overflow-hidden">
         
         <!-- Sidebar -->
-        <aside class="w-64 bg-py-dark text-white flex flex-col fixed h-full z-20 shadow-xl">
-            <div class="p-6 border-b border-white/10">
-                <h1 class="text-2xl font-bold text-white">PyLab</h1>
-                <p class="text-xs text-green-300 mt-1">Kelas Python Mandiri</p>
+        <aside id="sidebar" class="w-64 bg-py-dark text-white flex flex-col fixed h-full z-20 shadow-xl lg:translate-x-0 -translate-x-full transition-transform duration-300">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-white">PyLab</h1>
+                    <p class="text-xs text-green-300 mt-1">Kelas Python Mandiri</p>
+                </div>
+                <button id="close-sidebar-btn" class="lg:hidden text-white/70 hover:text-white" onclick="toggleMobileMenu()">✕</button>
             </div>
             
             <nav class="flex-1 overflow-y-auto scrollbar-hide py-4">
                 <div class="px-6 py-2 text-xs font-semibold text-green-400 uppercase tracking-wider">Mulai</div>
-                <a href="#" onclick="navigate('dashboard')" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover bg-py-dark-hover border-l-4 border-py-accent-light">
+                <a href="#" onclick="navigate('dashboard'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover bg-py-dark-hover border-l-4 border-py-accent-light">
                     <span class="mr-3">📊</span> Dashboard
                 </a>
 
@@ -54,18 +65,18 @@
                 <div id="sidebar-modules" class="space-y-1"></div>
 
                 <div class="px-6 py-2 mt-4 text-xs font-semibold text-green-400 uppercase tracking-wider">Praktik</div>
-                <a href="#" onclick="navigate('playground')" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
+                <a href="#" onclick="navigate('playground'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
                     <span class="mr-3">💻</span> Code Playground
                 </a>
-                <a href="#" onclick="navigate('exam')" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
+                <a href="#" onclick="navigate('exam'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
                     <span class="mr-3">📝</span> Ujian Akhir
                 </a>
 
                 <div class="px-6 py-2 mt-4 text-xs font-semibold text-green-400 uppercase tracking-wider">Alat Bantu</div>
-                <a href="#" onclick="navigate('cheatsheet')" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
+                <a href="#" onclick="navigate('cheatsheet'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
                     <span class="mr-3">📄</span> Cheat Sheet
                 </a>
-                <a href="#" onclick="navigate('videos')" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
+                <a href="#" onclick="navigate('videos'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
                     <span class="mr-3">🎬</span> Video Library
                 </a>
             </nav>
@@ -76,7 +87,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 ml-64 overflow-y-auto">
+        <main class="flex-1 ml-0 lg:ml-64 overflow-y-auto transition-all duration-300">
             
             <!-- VIEW: DASHBOARD -->
             <div id="view-dashboard" class="view p-8">
@@ -192,6 +203,83 @@ print("Rata-rata:", sum(data)/len(data))</textarea>
                 <p class="text-gray-600 mt-4">Halaman ini sedang dalam tahap pengembangan konten.</p>
             </div>
 
+            <!-- VIEW: VIDEO LIBRARY -->
+            <div id="view-videos" class="view hidden p-8">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold mb-2">🎬 Video Library</h2>
+                    <p class="text-gray-600">Kumpulan video pembelajaran untuk setiap modul.</p>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold mb-2 text-gray-700">Filter per Modul:</label>
+                    <select id="video-filter" onchange="renderVideos()" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-py-accent bg-white">
+                        <option value="all">Semua Modul</option>
+                        <option value="1">Modul 1 - Dasar Python</option>
+                        <option value="2">Modul 2 - Struktur Kontrol</option>
+                        <option value="3">Modul 3 - Struktur Data</option>
+                        <option value="4">Modul 4 - Fungsi & Modul</option>
+                        <option value="5">Modul 5 - OOP Dasar</option>
+                        <option value="6">Modul 6 - File & Error Handling</option>
+                        <option value="7">Modul 7 - Olah Data dengan Pandas</option>
+                        <option value="8">Modul 8 - Visualisasi Data</option>
+                    </select>
+                </div>
+
+                <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Video cards diisi dinamis -->
+                </div>
+            </div>
+
+            <!-- VIEW: CHEAT SHEET -->
+            <div id="view-cheatsheet" class="view hidden p-8">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold mb-2">📄 Cheat Sheet & Syntax Reference</h2>
+                    <p class="text-gray-600">Referensi cepat syntax Python untuk memudahkan coding Anda.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="cheatsheet-content">
+                    <!-- Cheat sheet cards diisi dinamis -->
+                </div>
+            </div>
+
+            <!-- VIEW: UJIAN AKHIR -->
+            <div id="view-exam" class="view hidden p-8 max-w-4xl mx-auto">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold mb-2">📝 Ujian Akhir</h2>
+                    <p class="text-gray-600">Uji pemahaman Anda dengan 10 soal pilihan ganda dari semua modul.</p>
+                </div>
+
+                <div id="exam-intro" class="bg-white rounded-card shadow-sm p-8 border border-gray-100">
+                    <div class="mb-6">
+                        <h3 class="text-xl font-bold mb-4">Petunjuk Ujian:</h3>
+                        <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                            <li>Terdiri dari 10 soal pilihan ganda</li>
+                            <li>Soal diambil secara acak dari semua modul (1-8)</li>
+                            <li>Skor minimum untuk lulus: <strong>70%</strong></li>
+                            <li>Tidak ada batas waktu, namun usahakan serius!</li>
+                            <li>Hasil ujian akan disimpan di sistem</li>
+                        </ul>
+                    </div>
+                    <button onclick="startExam()" class="w-full py-4 bg-py-accent text-white font-bold rounded-card hover:bg-green-700 text-lg">🚀 Mulai Ujian Akhir</button>
+                    
+                    <div id="exam-history" class="mt-8 pt-8 border-t border-gray-200">
+                        <h4 class="font-bold mb-4">Riwayat Ujian Anda:</h4>
+                        <div id="exam-history-list"></div>
+                    </div>
+                </div>
+
+                <div id="exam-questions" class="hidden bg-white rounded-card shadow-sm p-8 border border-gray-100">
+                    <form id="exam-form" class="space-y-6">
+                        <!-- Soal ujian diisi dinamis -->
+                    </form>
+                    <button onclick="submitExam()" class="w-full mt-6 py-4 bg-py-accent text-white font-bold rounded-card hover:bg-green-700 text-lg">📤 Submit Jawaban</button>
+                </div>
+
+                <div id="exam-result" class="hidden bg-white rounded-card shadow-sm p-8 border border-gray-100">
+                    <!-- Hasil ujian ditampilkan di sini -->
+                </div>
+            </div>
+
         </main>
     </div>
 
@@ -230,7 +318,7 @@ print("Rata-rata:", sum(data)/len(data))</textarea>
         const modules = [
             {
                 id: 1, title: "Dasar Python", sub: "Instalasi, syntax, variabel, tipe data, I/O",
-                videoId: "kqtXcfT1hOo", // Placeholder - Ganti Manual
+                videoId: "ZDa-Z5JzLYM", // Python Tutorial for Beginners - Full Course in 12 Hours (Programming with Mosh)
                 content: `
                     <h3 class="text-2xl font-bold mb-4">Modul 1: Dasar Python</h3>
                     <p class="mb-4">Python adalah bahasa pemrograman tingkat tinggi yang ditafsirkan (interpreted) dan berfokus pada keterbacaan kode.</p>
@@ -252,7 +340,7 @@ print(f"Halo, {input_val}")</code></pre>
                 ],
                 snippet: 'print("Halo, " + input("Nama: "))'
             },
-            { id: 2, title: "Struktur Kontrol", sub: "if/elif/else, loop, operator logika", videoId: "PLACEHOLDER_VIDEO_2", content: `
+            { id: 2, title: "Struktur Kontrol", sub: "if/elif/else, loop, operator logika", videoId: "6iF8Xb7Z3wQ", content: `
                 <h3 class="text-2xl font-bold mb-4">Modul 2: Struktur Kontrol</h3>
                 <p class="mb-4">Struktur kontrol memungkinkan program membuat keputusan dan mengulang blok kode berdasarkan kondisi tertentu.</p>
                 
@@ -330,7 +418,7 @@ for i in range(5):
     if i == 3:
         break
     print(f"Iterasi {i}")` },
-            { id: 3, title: "Struktur Data", sub: "list, tuple, dict, set, comprehension", videoId: "PLACEHOLDER_VIDEO_3", content: `
+            { id: 3, title: "Struktur Data", sub: "list, tuple, dict, set, comprehension", videoId: "9Oea7mNtSgA", content: `
                 <h3 class="text-2xl font-bold mb-4">Modul 3: Struktur Data</h3>
                 <p class="mb-4">Python menyediakan empat struktur data built-in yang powerful untuk menyimpan koleksi data.</p>
                 
@@ -438,7 +526,7 @@ print(f"Union: {A | B}")
 # List Comprehension
 kuadrat = [x**2 for x in range(5)]
 print(f"Kuadrat: {kuadrat}")` },
-            { id: 4, title: "Fungsi & Modul", sub: "def, parameter, return, import", videoId: "PLACEHOLDER_VIDEO_4", content: `
+            { id: 4, title: "Fungsi & Modul", sub: "def, parameter, return, import", videoId: "NEO0YqYGXaU", content: `
                 <h3 class="text-2xl font-bold mb-4">Modul 4: Fungsi & Modul</h3>
                 <p class="mb-4">Fungsi memungkinkan kita membungkus logika menjadi blok kode yang dapat digunakan kembali.</p>
                 
@@ -537,7 +625,7 @@ print(f"5^2 = {kuadrat(5)}")
 # Import modul standar
 import math
 print(f"Akar dari 81 = {math.sqrt(81)}")` },
-            { id: 5, title: "OOP Dasar", sub: "class, object, __init__, inheritance", videoId: "PLACEHOLDER_VIDEO_5", content: `
+            { id: 5, title: "OOP Dasar", sub: "class, object, __init__, inheritance", videoId: "Ej_02ICOIgo", content: `
                 <h3 class="text-2xl font-bold mb-4">Modul 5: OOP Dasar</h3>
                 <p class="mb-4">Object-Oriented Programming (OOP) adalah paradigma pemrograman berbasis objek yang mengandung data dan metode.</p>
                 
@@ -663,7 +751,7 @@ class Resistor(Circuit):
 
 res = Resistor(5, 100, 5)
 print(res.info())` },
-            { id: 6, title: "File & Error Handling", sub: "CSV, TXT, try/except, context manager", videoId: "PLACEHOLDER_VIDEO_6", content: `
+            { id: 6, title: "File & Error Handling", sub: "CSV, TXT, try/except, context manager", videoId: "A0ukVYhQXwE", content: `
                 <h3 class="text-2xl font-bold mb-4">Modul 6: File & Error Handling</h3>
                 <p class="mb-4">Mempelajari cara membaca/menulis file dan menangani error dengan baik.</p>
                 
@@ -797,7 +885,7 @@ class FakeFile:
 
 with FakeFile() as f:
     print(f.read())` },
-            { id: 7, title: "Olah Data dengan Pandas", sub: "DataFrame, Series, filtering, groupby, merge", videoId: "PLACEHOLDER_VIDEO_7", content: `
+            { id: 7, title: "Olah Data dengan Pandas", sub: "DataFrame, Series, filtering, groupby, merge", videoId: "vmEHCJofslg", content: `
                 <h3 class="text-2xl font-bold mb-4">Modul 7: Olah Data dengan Pandas</h3>
                 <p class="mb-4">Pandas adalah library Python untuk manipulasi dan analisis data tabular.</p>
                 
@@ -905,7 +993,7 @@ print(grouped)
 
 print("\\n=== Rata-rata Nilai ===")
 print(f"Mean: {df['Nilai'].mean():.2f}")` },
-            { id: 8, title: "Visualisasi Data", sub: "Matplotlib, Seaborn, line chart, bar chart, scatter plot", videoId: "PLACEHOLDER_VIDEO_8", content: `
+            { id: 8, title: "Visualisasi Data", sub: "Matplotlib, Seaborn, line chart, bar chart, scatter plot", videoId: "3xHb5N9uJGI", content: `
                 <h3 class="text-2xl font-bold mb-4">Modul 8: Visualisasi Data</h3>
                 <p class="mb-4">Visualisasi membantu memahami pola dan insight dari data yang kompleks.</p>
                 
@@ -1035,24 +1123,51 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
         // LOGIC & UI
         // ==========================================
         async function initPyodide() {
+            const outputEl = document.getElementById('output');
+            const runBtn = document.getElementById('btn-run');
+            
             try {
-                document.getElementById('output').innerText = "Memuat Pyodide (WebAssembly)... Mohon tunggu.";
+                outputEl.innerText = "⏳ Memuat Pyodide (WebAssembly)... Mohon tunggu beberapa saat.";
+                if (runBtn) runBtn.disabled = true;
+                
                 pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/" });
                 await pyodide.loadPackage(['pandas', 'numpy']); // Preload untuk modul data
-                document.getElementById('output').innerText = "Environment Python siap! Silakan tulis kode.";
+                
+                outputEl.innerText = "✅ Environment Python siap! Silakan tulis kode.";
+                if (runBtn) runBtn.disabled = false;
             } catch (e) {
-                document.getElementById('output').innerText = "Error memuat Pyodide: " + e;
+                outputEl.innerText = "❌ Error memuat Pyodide: " + e;
+                if (runBtn) runBtn.disabled = false;
             }
         }
 
         function navigate(view) {
             document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+            
+            // Update active state di sidebar
+            document.querySelectorAll('#sidebar-modules a, nav a[onclick^="navigate"]').forEach(a => {
+                a.classList.remove('bg-py-dark-hover', 'border-l-4', 'border-py-accent-light');
+            });
+            const activeLink = document.querySelector(`nav a[onclick="navigate('${view}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('bg-py-dark-hover', 'border-l-4', 'border-py-accent-light');
+            }
+            
             if (view === 'dashboard') {
                 document.getElementById('view-dashboard').classList.remove('hidden');
                 updateStats();
             } else if (view === 'playground') {
                 document.getElementById('view-playground').classList.remove('hidden');
                 if (!pyodide) initPyodide();
+            } else if (view === 'videos') {
+                document.getElementById('view-videos').classList.remove('hidden');
+                renderVideos();
+            } else if (view === 'cheatsheet') {
+                document.getElementById('view-cheatsheet').classList.remove('hidden');
+                renderCheatsheet();
+            } else if (view === 'exam') {
+                document.getElementById('view-exam').classList.remove('hidden');
+                renderExamHistory();
             } else {
                 document.getElementById('view-others').classList.remove('hidden');
                 document.getElementById('others-title').innerText = view.charAt(0).toUpperCase() + view.slice(1);
@@ -1256,6 +1371,549 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
                 chat.innerHTML += `<div class="flex justify-start"><div class="bg-white border border-gray-200 p-3 rounded-lg max-w-[80%] shadow-sm"><p class="font-semibold text-py-accent text-xs">PyMate</p>${reply}</div></div>`;
                 chat.scrollTop = chat.scrollHeight;
             }, 600);
+        }
+
+        // Mobile Sidebar Toggle
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('mobile-backdrop');
+            const btn = document.getElementById('mobile-menu-btn');
+            
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                btn.innerHTML = '☰';
+            } else {
+                btn.innerHTML = '✕';
+            }
+        }
+
+        // Event listener untuk hamburger button
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            }
+        });
+
+        // ==========================================
+        // VIDEO LIBRARY FUNCTIONS
+        // ==========================================
+        function renderVideos() {
+            const filter = document.getElementById('video-filter').value;
+            const container = document.getElementById('video-grid');
+            
+            let filteredModules = modules;
+            if (filter !== 'all') {
+                filteredModules = modules.filter(m => m.id === parseInt(filter));
+            }
+            
+            container.innerHTML = filteredModules.map(m => {
+                const isPlaceholder = m.videoId === 'PLACEHOLDER' || !m.videoId || m.videoId.startsWith('PLACEHOLDER');
+                
+                if (isPlaceholder) {
+                    return `
+                        <div class="bg-white rounded-card shadow-sm border border-gray-200 overflow-hidden">
+                            <div class="aspect-video bg-gray-300 flex items-center justify-center">
+                                <div class="text-center text-gray-500">
+                                    <span class="text-4xl mb-2 block">🎬</span>
+                                    <p class="text-sm font-semibold">Video segera hadir</p>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <span class="text-xs font-bold text-py-accent uppercase">Modul ${m.id}</span>
+                                <h3 class="font-bold text-gray-900 mt-1">${m.title}</h3>
+                                <p class="text-sm text-gray-600 mt-1">${m.sub}</p>
+                                <button disabled class="mt-3 w-full py-2 bg-gray-200 text-gray-500 font-semibold rounded-lg cursor-not-allowed">Tonton</button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="bg-white rounded-card shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
+                            <div class="aspect-video relative">
+                                <img src="https://img.youtube.com/vi/${m.videoId}/hqdefault.jpg" alt="${m.title}" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition">
+                                    <a href="https://www.youtube.com/watch?v=${m.videoId}" target="_blank" class="px-6 py-3 bg-py-accent text-white font-bold rounded-lg flex items-center">
+                                        <span class="mr-2">▶</span> Tonton di YouTube
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <span class="text-xs font-bold text-py-accent uppercase">Modul ${m.id}</span>
+                                <h3 class="font-bold text-gray-900 mt-1">${m.title}</h3>
+                                <p class="text-sm text-gray-600 mt-1">${m.sub}</p>
+                                <a href="https://www.youtube.com/watch?v=${m.videoId}" target="_blank" class="mt-3 block w-full py-2 bg-py-accent text-white text-center font-semibold rounded-lg hover:bg-green-700">Tonton Video</a>
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+
+        // ==========================================
+        // CHEAT SHEET FUNCTIONS
+        // ==========================================
+        function renderCheatsheet() {
+            const cheatsheets = [
+                {
+                    title: "Variabel & Tipe Data",
+                    icon: "📦",
+                    content: `<pre><code># Variabel
+nama = "Beryl"      # string
+usia = 23           # integer (int)
+ipk = 3.85          # float
+aktif = True        # boolean (bool)
+
+# Cek tipe data
+type(nama)  # &lt;class 'str'&gt;
+
+# Konversi tipe data
+angka_str = str(123)    # "123"
+angka_int = int("456")  # 456
+angka_float = float(7)  # 7.0</code></pre>`
+                },
+                {
+                    title: "Operator",
+                    icon: "➕",
+                    content: `<pre><code># Aritmatika
+a + b   # Penjumlahan
+a - b   # Pengurangan
+a * b   # Perkalian
+a / b   # Pembagian (float)
+a // b  # Pembagian bulat
+a % b   # Modulus (sisa bagi)
+a ** b  # Pangkat
+
+# Perbandingan
+a == b  # Sama dengan
+a != b  # Tidak sama
+a > b   # Lebih besar
+a &lt;= b  # Lebih kecil atau sama
+
+# Logika
+a and b  # DAN
+a or b   # ATAU
+not a    # NEGASI</code></pre>`
+                },
+                {
+                    title: "Kondisi (if/else)",
+                    icon: "🔀",
+                    content: `<pre><code># if tunggal
+if nilai >= 75:
+    print("Lulus")
+
+# if-else
+if nilai >= 75:
+    print("Lulus")
+else:
+    print("Remedial")
+
+# if-elif-else
+if nilai >= 90:
+    grade = "A"
+elif nilai >= 80:
+    grade = "B"
+elif nilai >= 70:
+    grade = "C"
+else:
+    grade = "D"
+
+# Ternary operator
+status = "Lulus" if nilai >= 75 else "Remedial"</code></pre>`
+                },
+                {
+                    title: "Loop (for/while)",
+                    icon: "🔄",
+                    content: `<pre><code># for loop
+for i in range(5):
+    print(i)  # 0,1,2,3,4
+
+# for dengan list
+buah = ["apel", "jeruk"]
+for b in buah:
+    print(b)
+
+# for dengan index
+for i, b in enumerate(buah):
+    print(f"{i}: {b}")
+
+# while loop
+count = 0
+while count < 5:
+    print(count)
+    count += 1
+
+# break & continue
+for i in range(10):
+    if i == 5:
+        break   # keluar loop
+    if i == 2:
+        continue  # skip iterasi
+    print(i)</code></pre>`
+                },
+                {
+                    title: "Fungsi (def)",
+                    icon: "⚙️",
+                    content: `<pre><code># Fungsi dasar
+def sapa(nama):
+    return f"Halo, {nama}!"
+
+# Default parameter
+def pangkat(x, n=2):
+    return x ** n
+
+# *args dan **kwargs
+def info(*args, **kwargs):
+    print(args)   # tuple
+    print(kwargs) # dict
+
+# Lambda function
+kuadrat = lambda x: x ** 2
+print(kuadrat(5))  # 25
+
+# Call function
+sapa("Beryl")
+pangkat(3, 3)  # 27</code></pre>`
+                },
+                {
+                    title: "List Method",
+                    icon: "📋",
+                    content: `<pre><code>lst = [1, 2, 3]
+
+lst.append(4)        # [1,2,3,4]
+lst.insert(0, 0)     # [0,1,2,3,4]
+lst.extend([5,6])    # [0,1,2,3,4,5,6]
+lst.remove(0)        # hapus nilai 0
+lst.pop()            # hapus terakhir
+lst.pop(0)           # hapus index 0
+lst.index(3)         # cari index nilai 3
+lst.count(2)         # hitung kemunculan
+lst.sort()           # urutkan ascending
+lst.reverse()        # balik urutan
+len(lst)             # panjang list</code></pre>`
+                },
+                {
+                    title: "Dict Method",
+                    icon: "🗂️",
+                    content: `<pre><code>dict = {"nama": "Beryl", "ipk": 3.85}
+
+dict["jurusan"] = "Elektro"  # tambah/update
+dict.get("nama")             # "Beryl"
+dict.keys()                  # semua keys
+dict.values()                # semua values
+dict.items()                 # semua key-value pairs
+dict.pop("ipk")              # hapus & return value
+del dict["jurusan"]          # hapus item
+
+# Iterasi
+for k, v in dict.items():
+    print(f"{k}: {v}")</code></pre>`
+                },
+                {
+                    title: "String Method",
+                    icon: "📝",
+                    content: `<pre><code>s = "  Hello World  "
+
+s.upper()           # "  HELLO WORLD  "
+s.lower()           # "  hello world  "
+s.strip()           # "Hello World"
+s.replace("o","0")  # "Hell0 W0rld"
+s.split(" ")        # ["Hello","World"]
+s.find("World")     # 7 (index)
+s.startswith("He")  # True
+s.endswith("ld")    # True
+len(s)              # panjang string
+
+# f-string (format)
+nama = "Beryl"
+f"Halo, {nama}!"    # "Halo, Beryl!"</code></pre>`
+                },
+                {
+                    title: "Exception Handling",
+                    icon: "⚠️",
+                    content: `<pre><code># try-except dasar
+try:
+    hasil = 10 / 0
+except ZeroDivisionError:
+    print("Tidak bisa bagi nol!")
+
+# Multiple exceptions
+try:
+    x = int(input())
+    y = 10 / x
+except ValueError:
+    print("Input harus angka!")
+except ZeroDivisionError:
+    print("Tidak bisa bagi nol!")
+
+# try-except-finally
+try:
+    file = open("data.txt")
+except FileNotFoundError:
+    print("File tidak ada")
+finally:
+    print("Selalu dijalankan")
+
+# Raise exception
+if usia < 0:
+    raise ValueError("Usia tidak boleh negatif")</code></pre>`
+                },
+                {
+                    title: "Pandas Dasar",
+                    icon: "📊",
+                    content: `<pre><code>import pandas as pd
+
+# Buat DataFrame
+df = pd.DataFrame({
+    'Nama': ['A','B'],
+    'Nilai': [80, 90]
+})
+
+# Akses kolom
+df['Nama']
+df[['Nama','Nilai']]
+
+# Filter
+df[df['Nilai'] >= 85]
+
+# Statistik
+df.describe()
+df['Nilai'].mean()
+
+# GroupBy
+df.groupby('Jurusan')['Nilai'].mean()
+
+# Handle NaN
+df.dropna()
+df.fillna(0)</code></pre>`
+                },
+                {
+                    title: "Matplotlib Dasar",
+                    icon: "📈",
+                    content: `<pre><code>import matplotlib.pyplot as plt
+
+# Line plot
+plt.plot([1,2,3], [1,4,9])
+plt.title("Grafik")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.grid(True)
+plt.show()
+
+# Bar chart
+plt.bar(['A','B','C'], [10,20,30])
+plt.show()
+
+# Scatter plot
+plt.scatter([1,2,3], [2,4,6])
+plt.show()
+
+# Histogram
+plt.hist(data, bins=10)
+plt.show()
+
+# Simpan gambar
+plt.savefig('grafik.png', dpi=300)</code></pre>`
+                },
+                {
+                    title: "File I/O",
+                    icon: "📁",
+                    content: `<pre><code># Baca file TXT
+with open("data.txt", "r") as f:
+    isi = f.read()
+
+# Baca per baris
+with open("data.txt", "r") as f:
+    for baris in f:
+        print(baris.strip())
+
+# Tulis file (overwrite)
+with open("out.txt", "w") as f:
+    f.write("Hello\\n")
+
+# Append file
+with open("out.txt", "a") as f:
+    f.write("World\\n")
+
+# Baca CSV
+import csv
+with open("data.csv") as f:
+    reader = csv.reader(f)
+    for row in reader:
+        print(row)</code></pre>`
+                }
+            ];
+            
+            const container = document.getElementById('cheatsheet-content');
+            container.innerHTML = cheatsheets.map(cs => `
+                <div class="bg-white rounded-card shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-bold mb-3 flex items-center">
+                        <span class="mr-2">${cs.icon}</span> ${cs.title}
+                    </h3>
+                    ${cs.content}
+                </div>
+            `).join('');
+        }
+
+        // ==========================================
+        // UJIAN AKHIR FUNCTIONS
+        // ==========================================
+        let currentExamQuestions = [];
+        
+        function startExam() {
+            // Ambil semua soal dari semua modul
+            const allQuestions = [];
+            modules.forEach(m => {
+                if (m.quiz && m.quiz.length > 0) {
+                    m.quiz.forEach(q => {
+                        allQuestions.push({
+                            ...q,
+                            moduleId: m.id,
+                            moduleTitle: m.title
+                        });
+                    });
+                }
+            });
+            
+            // Acak dan ambil 10 soal
+            const shuffled = allQuestions.sort(() => Math.random() - 0.5);
+            currentExamQuestions = shuffled.slice(0, 10);
+            
+            // Render soal
+            const formContainer = document.getElementById('exam-form');
+            formContainer.innerHTML = currentExamQuestions.map((q, i) => `
+                <div class="bg-gray-50 p-4 rounded-card border border-gray-200">
+                    <p class="font-semibold mb-3">
+                        <span class="text-py-accent mr-2">Soal ${i+1}:</span>
+                        ${q.q}
+                        <span class="block text-xs text-gray-500 mt-1">Dari Modul ${q.moduleId}: ${q.moduleTitle}</span>
+                    </p>
+                    <div class="space-y-2">
+                        ${q.opts.map((opt, j) => `
+                            <label class="flex items-center space-x-2 cursor-pointer p-2 hover:bg-white rounded transition">
+                                <input type="radio" name="exam_q${i}" value="${j}" class="text-py-accent focus:ring-py-accent">
+                                <span class="text-sm">${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+            
+            // Toggle view
+            document.getElementById('exam-intro').classList.add('hidden');
+            document.getElementById('exam-questions').classList.remove('hidden');
+            document.getElementById('exam-result').classList.add('hidden');
+        }
+        
+        function submitExam() {
+            let correct = 0;
+            let explanations = [];
+            
+            currentExamQuestions.forEach((q, i) => {
+                const selected = document.querySelector(`input[name="exam_q${i}"]:checked`);
+                const userAnswer = selected ? parseInt(selected.value) : -1;
+                const isCorrect = userAnswer === q.ans;
+                
+                if (isCorrect) correct++;
+                
+                explanations.push(`
+                    <div class="mb-4 pb-4 border-b border-gray-200 last:border-0">
+                        <p class="font-semibold mb-2">Soal ${i+1}: ${q.q}</p>
+                        <p class="text-sm mb-1">
+                            <span class="${isCorrect ? 'text-green-600' : 'text-red-600'} font-semibold">
+                                Jawaban Anda: ${userAnswer >= 0 ? q.opts[userAnswer] : 'Tidak dijawab'}
+                            </span>
+                        </p>
+                        ${!isCorrect ? `<p class="text-sm text-green-600 mb-1"><strong>Jawaban Benar:</strong> ${q.opts[q.ans]}</p>` : ''}
+                        <p class="text-sm text-gray-600"><strong>Pembahasan:</strong> ${q.exp}</p>
+                    </div>
+                `);
+            });
+            
+            const score = Math.round((correct / currentExamQuestions.length) * 100);
+            const passed = score >= 70;
+            
+            // Simpan hasil ujian
+            const examResult = {
+                date: new Date().toISOString(),
+                score: score,
+                correct: correct,
+                total: currentExamQuestions.length,
+                passed: passed
+            };
+            
+            const examHistory = JSON.parse(localStorage.getItem('pylab_final_exam') || '[]');
+            examHistory.push(examResult);
+            localStorage.setItem('pylab_final_exam', JSON.stringify(examHistory));
+            
+            // Render hasil
+            document.getElementById('exam-questions').classList.add('hidden');
+            document.getElementById('exam-result').classList.remove('hidden');
+            
+            document.getElementById('exam-result').innerHTML = `
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full ${passed ? 'bg-green-100' : 'bg-red-100'} mb-4">
+                        <span class="text-4xl">${passed ? '🎉' : '📚'}</span>
+                    </div>
+                    <h3 class="text-2xl font-bold ${passed ? 'text-green-800' : 'text-red-800'}">
+                        ${passed ? 'SELAMAT! ANDA LULUS' : 'BELUM LULUS'}
+                    </h3>
+                    <p class="text-4xl font-extrabold mt-2 ${passed ? 'text-green-600' : 'text-red-600'}">${score}%</p>
+                    <p class="text-gray-600 mt-2">${correct} dari ${currentExamQuestions.length} soal benar</p>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-bold mb-4">📖 Pembahasan Semua Soal:</h4>
+                    <div class="bg-gray-50 p-4 rounded-card border border-gray-200 max-h-96 overflow-y-auto">
+                        ${explanations.join('')}
+                    </div>
+                </div>
+                
+                <button onclick="renderExamHistory(); document.getElementById('exam-intro').classList.remove('hidden'); document.getElementById('exam-result').classList.add('hidden');" 
+                    class="w-full py-3 bg-py-accent text-white font-bold rounded-card hover:bg-green-700">
+                    ← Kembali ke Menu Ujian
+                </button>
+            `;
+        }
+        
+        function renderExamHistory() {
+            const examHistory = JSON.parse(localStorage.getItem('pylab_final_exam') || '[]');
+            const container = document.getElementById('exam-history-list');
+            
+            if (examHistory.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">Belum ada riwayat ujian.</p>';
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-4 py-2 text-left">Tanggal</th>
+                                <th class="px-4 py-2 text-center">Skor</th>
+                                <th class="px-4 py-2 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${examHistory.slice(-5).reverse().map(r => `
+                                <tr class="border-b border-gray-100">
+                                    <td class="px-4 py-2">${new Date(r.date).toLocaleDateString('id-ID')}</td>
+                                    <td class="px-4 py-2 text-center font-bold ${r.passed ? 'text-green-600' : 'text-red-600'}">${r.score}%</td>
+                                    <td class="px-4 py-2 text-center">
+                                        <span class="px-2 py-1 rounded text-xs font-semibold ${r.passed ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                            ${r.passed ? 'LULUS' : 'TIDAK LULUS'}
+                                        </span>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">Menampilkan 5 ujian terakhir dari total ${examHistory.length} ujian</p>
+            `;
         }
 
         // Initialize
