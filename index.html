@@ -57,7 +57,7 @@
             
             <nav class="flex-1 overflow-y-auto scrollbar-hide py-4">
                 <div class="px-6 py-2 text-xs font-semibold text-green-400 uppercase tracking-wider">Mulai</div>
-                <a href="#" onclick="navigate('dashboard'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover bg-py-dark-hover border-l-4 border-py-accent-light">
+                <a href="#" data-view="dashboard" onclick="navigate('dashboard'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
                     <span class="mr-3">📊</span> Dashboard
                 </a>
 
@@ -65,18 +65,18 @@
                 <div id="sidebar-modules" class="space-y-1"></div>
 
                 <div class="px-6 py-2 mt-4 text-xs font-semibold text-green-400 uppercase tracking-wider">Praktik</div>
-                <a href="#" onclick="navigate('playground'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
+                <a href="#" data-view="playground" onclick="navigate('playground'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
                     <span class="mr-3">💻</span> Code Playground
                 </a>
-                <a href="#" onclick="navigate('exam'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
+                <a href="#" data-view="exam" onclick="navigate('exam'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
                     <span class="mr-3">📝</span> Ujian Akhir
                 </a>
 
                 <div class="px-6 py-2 mt-4 text-xs font-semibold text-green-400 uppercase tracking-wider">Alat Bantu</div>
-                <a href="#" onclick="navigate('cheatsheet'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
+                <a href="#" data-view="cheatsheet" onclick="navigate('cheatsheet'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
                     <span class="mr-3">📄</span> Cheat Sheet
                 </a>
-                <a href="#" onclick="navigate('videos'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
+                <a href="#" data-view="videos" onclick="navigate('videos'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
                     <span class="mr-3">🎬</span> Video Library
                 </a>
             </nav>
@@ -312,7 +312,9 @@ print("Rata-rata:", sum(data)/len(data))</textarea>
         let pyodide;
         const state = {
             modulesCompleted: JSON.parse(localStorage.getItem('pylab_completed')) || [],
-            quizScores: JSON.parse(localStorage.getItem('pylab_scores')) || {}
+            quizScores: JSON.parse(localStorage.getItem('pylab_scores')) || {},
+            currentView: 'dashboard',
+            currentModuleId: null
         };
 
         const modules = [
@@ -1141,17 +1143,24 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
             }
         }
 
+        function updateSidebarActive() {
+            document.querySelectorAll('#sidebar nav a').forEach(a => a.classList.remove('bg-py-dark-hover', 'text-white'));
+
+            let activeLink = null;
+            if (state.currentView === 'module' && state.currentModuleId) {
+                activeLink = document.querySelector(`#sidebar-modules a[data-module-id="${state.currentModuleId}"]`);
+            } else {
+                activeLink = document.querySelector(`#sidebar nav a[data-view="${state.currentView}"]`);
+            }
+            if (activeLink) activeLink.classList.add('bg-py-dark-hover', 'text-white');
+        }
+
         function navigate(view) {
             document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
             
-            // Update active state di sidebar
-            document.querySelectorAll('#sidebar-modules a, nav a[onclick^="navigate"]').forEach(a => {
-                a.classList.remove('bg-py-dark-hover', 'border-l-4', 'border-py-accent-light');
-            });
-            const activeLink = document.querySelector(`nav a[onclick="navigate('${view}')"]`);
-            if (activeLink) {
-                activeLink.classList.add('bg-py-dark-hover', 'border-l-4', 'border-py-accent-light');
-            }
+            state.currentView = view;
+            state.currentModuleId = null;
+            updateSidebarActive();
             
             if (view === 'dashboard') {
                 document.getElementById('view-dashboard').classList.remove('hidden');
@@ -1177,11 +1186,12 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
         function renderSidebarModules() {
             const container = document.getElementById('sidebar-modules');
             container.innerHTML = modules.map(m => `
-                <a href="#" onclick="openModule(${m.id})" class="flex items-center px-6 py-3 text-white/80 hover:bg-py-dark-hover hover:text-white text-sm transition ${state.modulesCompleted.includes(m.id) ? 'border-l-4 border-green-400' : ''}">
+                <a href="#" data-module-id="${m.id}" onclick="openModule(${m.id})" class="flex items-center px-6 py-3 text-white/80 hover:bg-py-dark-hover hover:text-white text-sm transition ${state.modulesCompleted.includes(m.id) ? 'border-l-4 border-green-400' : ''}">
                     <span class="mr-3 text-xs font-bold w-6 h-6 rounded-full ${state.modulesCompleted.includes(m.id) ? 'bg-green-500 text-white' : 'bg-white/10 text-white/60'} flex items-center justify-center">${m.id}</span>
                     ${m.title}
                 </a>
             `).join('');
+            updateSidebarActive();
         }
 
         function openModule(id) {
@@ -1190,6 +1200,10 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
 
             document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
             document.getElementById('view-module').classList.remove('hidden');
+
+            state.currentView = 'module';
+            state.currentModuleId = id;
+            updateSidebarActive();
 
             const isCompleted = state.modulesCompleted.includes(id);
             
