@@ -252,13 +252,783 @@ print(f"Halo, {input_val}")</code></pre>
                 ],
                 snippet: 'print("Halo, " + input("Nama: "))'
             },
-            { id: 2, title: "Struktur Kontrol", sub: "if/elif/else, loop, operator logika", videoId: "PLACEHOLDER_VIDEO_2", content: "<h3>Modul 2: Struktur Kontrol</h3><p>Materi tentang percabangan (if/else) dan perulangan (for/while).</p>", quiz: [], snippet: 'for i in range(5): print(i)' },
-            { id: 3, title: "Struktur Data", sub: "list, tuple, dict, set, comprehension", videoId: "PLACEHOLDER_VIDEO_3", content: "<h3>Modul 3: Struktur Data</h3><p>Koleksi data di Python.</p>", quiz: [], snippet: 'nums = [x**2 for x in range(10)]\nprint(nums)' },
-            { id: 4, title: "Fungsi & Modul", sub: "def, parameter, return, import", videoId: "PLACEHOLDER_VIDEO_4", content: "<h3>Modul 4: Fungsi & Modul</h3><p>Membungkus logika ke dalam fungsi.</p>", quiz: [], snippet: 'def luas(p, l): return p * l\nprint(luas(5, 3))' },
-            { id: 5, title: "OOP Dasar", sub: "class, object, init, inheritance", videoId: "PLACEHOLDER_VIDEO_5", content: "<h3>Modul 5: OOP Dasar</h3><p>Pemrograman berorientasi objek.</p>", quiz: [], snippet: 'class Circuit:\n    def __init__(self, v, r):\n        self.v = v\n        self.r = r\n    def current(self):\n        return self.v / self.r\n\nc = Circuit(12, 4)\nprint(c.current())' },
-            { id: 6, title: "File & Error Handling", sub: "CSV, TXT, try/except", videoId: "PLACEHOLDER_VIDEO_6", content: "<h3>Modul 6: File & Error Handling</h3><p>Membaca file dan menangani error.</p>", quiz: [], snippet: 'try:\n    x = 10 / 0\nexcept ZeroDivisionError:\n    print("Error: Bagi nol!")' },
-            { id: 7, title: "Olah Data dengan Pandas", sub: "DataFrame, filtering, groupby", videoId: "PLACEHOLDER_VIDEO_7", content: "<h3>Modul 7: Pandas</h3><p>Manipulasi data tabular.</p>", quiz: [], snippet: 'import pandas as pd\ndf = pd.DataFrame({"A":[1,2], "B":[3,4]})\nprint(df)' },
-            { id: 8, title: "Visualisasi Data", sub: "Matplotlib/Seaborn dasar", videoId: "PLACEHOLDER_VIDEO_8", content: "<h3>Modul 8: Visualisasi</h3><p>Membuat chart dari dataset.</p>", quiz: [], snippet: 'import matplotlib.pyplot as plt\n# Catatan: Plot tidak akan tampil di playground karena keterbatasan GUI WASM' }
+            { id: 2, title: "Struktur Kontrol", sub: "if/elif/else, loop, operator logika", videoId: "PLACEHOLDER_VIDEO_2", content: `
+                <h3 class="text-2xl font-bold mb-4">Modul 2: Struktur Kontrol</h3>
+                <p class="mb-4">Struktur kontrol memungkinkan program membuat keputusan dan mengulang blok kode berdasarkan kondisi tertentu.</p>
+                
+                <h4 class="font-bold text-lg mt-6 mb-2">1. Percabangan (if/elif/else)</h4>
+                <p class="mb-2">Digunakan untuk mengeksekusi kode hanya jika kondisi tertentu terpenuhi.</p>
+                <pre><code>nilai = 75
+
+if nilai >= 90:
+    grade = "A"
+elif nilai >= 70:
+    grade = "B"
+elif nilai >= 50:
+    grade = "C"
+else:
+    grade = "D"
+
+print(f"Grade Anda: {grade}")</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">2. Operator Logika</h4>
+                <p class="mb-2">Python memiliki tiga operator logika: <code>and</code>, <code>or</code>, <code>not</code>.</p>
+                <pre><code>usia = 25
+punya_sim = True
+
+if usia >= 17 and punya_sim:
+    print("Boleh mengemudi")
+else:
+    print("Tidak boleh mengemudi")</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">3. Perulangan for</h4>
+                <p class="mb-2">Digunakan untuk mengiterasi sequence (list, string, range).</p>
+                <pre><code># Loop melalui range angka
+for i in range(5):
+    print(f"Iterasi ke-{i}")
+
+# Loop melalui list
+buah = ["apel", "jeruk", "mangga"]
+for b in buah:
+    print(f"Saya suka {b}")</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">4. Perulangan while</h4>
+                <p class="mb-2">Melanjutkan loop selama kondisi benar.</p>
+                <pre><code>count = 0
+while count < 5:
+    print(f"Count: {count}")
+    count += 1  # Increment agar tidak infinite loop</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">5. Break dan Continue</h4>
+                <pre><code># break: keluar dari loop
+for i in range(10):
+    if i == 5:
+        break
+    print(i)  # Output: 0 1 2 3 4
+
+# continue: skip iterasi saat ini
+for i in range(5):
+    if i == 2:
+        continue
+    print(i)  # Output: 0 1 3 4</code></pre>
+            `, quiz: [
+                { q: "Apa output dari kode berikut?<br><code>x = 10<br>if x > 5:<br>&nbsp;&nbsp;print('A')<br>elif x > 8:<br>&nbsp;&nbsp;print('B')<br>else:<br>&nbsp;&nbsp;print('C')</code>", opts: ["A", "B", "C", "A dan B"], ans: 0, exp: "Kondisi pertama (x > 5) sudah True, sehingga blok if pertama dieksekusi dan elif/else di-skip." },
+                { q: "Fungsi range(3) menghasilkan sequence angka...", opts: ["[1, 2, 3]", "[0, 1, 2, 3]", "[0, 1, 2]", "[1, 2]"], ans: 2, exp: "range(n) menghasilkan angka dari 0 sampai n-1, jadi range(3) = [0, 1, 2]." },
+                { q: "Keyword apa yang digunakan untuk keluar dari loop sebelum waktunya?", opts: ["stop", "exit", "break", "return"], ans: 2, exp: "break digunakan untuk menghentikan loop secara paksa, sedangkan continue hanya melewatkan iterasi saat ini." }
+            ], snippet: `# Contoh struktur kontrol
+nilai = 85
+
+if nilai >= 90:
+    print("Grade: A")
+elif nilai >= 70:
+    print("Grade: B")
+else:
+    print("Grade: C")
+
+# Loop dengan kondisi
+for i in range(5):
+    if i == 3:
+        break
+    print(f"Iterasi {i}")` },
+            { id: 3, title: "Struktur Data", sub: "list, tuple, dict, set, comprehension", videoId: "PLACEHOLDER_VIDEO_3", content: `
+                <h3 class="text-2xl font-bold mb-4">Modul 3: Struktur Data</h3>
+                <p class="mb-4">Python menyediakan empat struktur data built-in yang powerful untuk menyimpan koleksi data.</p>
+                
+                <h4 class="font-bold text-lg mt-6 mb-2">1. List (Daftar)</h4>
+                <p class="mb-2">Koleksi terurut yang dapat diubah (mutable). Menggunakan kurung siku [].</p>
+                <pre><code># Membuat list
+angka = [1, 2, 3, 4, 5]
+nama = ["Andi", "Beryl", "Citra"]
+
+# Mengakses elemen
+print(angka[0])  # Output: 1
+print(nama[-1])  # Output: Citra (index dari belakang)
+
+# Modifikasi list
+angka.append(6)      # Tambah di akhir
+angka.insert(0, 0)   # Sisip di index 0
+angka.remove(3)      # Hapus nilai 3
+
+# Slicing (potong list)
+print(angka[1:4])  # Output: [2, 3, 4]</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">2. Tuple</h4>
+                <p class="mb-2">Seperti list tapi tidak bisa diubah (immutable). Menggunakan kurung ().</p>
+                <pre><code>koordinat = (10, 20)
+warna = ("merah", "hijau", "biru")
+
+# Tuple unpacking
+x, y = koordinat
+print(f"x={x}, y={y}")
+
+# Tidak bisa dimodifikasi - ini akan error:
+# koordinat[0] = 5  # TypeError!</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">3. Dictionary (Kamus)</h4>
+                <p class="mb-2">Koleksi key-value pairs. Menggunakan kurung kurawal {}.</p>
+                <pre><code>mahasiswa = {
+    "nama": "Beryl",
+    "nim": "H14123001",
+    "ipk": 3.85
+}
+
+# Mengakses value
+print(mahasiswa["nama"])  # Output: Beryl
+print(mahasiswa.get("ipk"))  # Output: 3.85
+
+# Menambah/mengubah
+mahasiswa["jurusan"] = "Elektro"
+mahasiswa["ipk"] = 3.90
+
+# Iterasi dictionary
+for key, value in mahasiswa.items():
+    print(f"{key}: {value}")</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">4. Set (Himpunan)</h4>
+                <p class="mb-2">Koleksi unik tanpa urutan. Berguna untuk operasi himpunan.</p>
+                <pre><code>A = {1, 2, 3, 4, 5}
+B = {4, 5, 6, 7, 8}
+
+# Union (gabungan)
+print(A | B)  # {1, 2, 3, 4, 5, 6, 7, 8}
+
+# Intersection (irisan)
+print(A & B)  # {4, 5}
+
+# Difference (selisih)
+print(A - B)  # {1, 2, 3}</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">5. List Comprehension</h4>
+                <p class="mb-2">Cara ringkas membuat list baru dari iterable yang ada.</p>
+                <pre><code># Cara biasa
+kuadrat = []
+for i in range(10):
+    kuadrat.append(i**2)
+
+# Dengan comprehension (lebih Pythonic!)
+kuadrat = [i**2 for i in range(10)]
+
+# Dengan kondisi
+genap = [x for x in range(20) if x % 2 == 0]</code></pre>
+            `, quiz: [
+                { q: "Manakah struktur data yang TIDAK dapat diubah setelah dibuat (immutable)?", opts: ["List", "Dictionary", "Set", "Tuple"], ans: 3, exp: "Tuple adalah immutable, artinya elemennya tidak bisa diubah, ditambah, atau dihapus setelah dibuat." },
+                { q: "Apa output dari:<br><code>data = {'a': 1, 'b': 2}<br>print(data.get('c', 0))</code>", opts: ["Error", "None", "0", "2"], ans: 2, exp: "Method get() mengembalikan value untuk key yang diberikan, atau default value (0) jika key tidak ditemukan." },
+                { q: "Hasil dari [x*2 for x in range(3)] adalah...", opts: ["[0, 1, 2]", "[1, 2, 3]", "[0, 2, 4]", "[2, 4, 6]"], ans: 2, exp: "range(3) = [0,1,2], lalu setiap elemen dikali 2, hasilnya [0, 2, 4]." }
+            ], snippet: `# Struktur Data Python
+# List
+buah = ["apel", "jeruk", "mangga"]
+buah.append("anggur")
+print(f"List buah: {buah}")
+
+# Tuple
+koordinat = (10, 20)
+x, y = koordinat
+print(f"Koordinat: x={x}, y={y}")
+
+# Dictionary
+mahasiswa = {"nama": "Beryl", "ipk": 3.85}
+mahasiswa["jurusan"] = "Elektro"
+print(f"Mahasiswa: {mahasiswa}")
+
+# Set
+A = {1, 2, 3, 4}
+B = {3, 4, 5, 6}
+print(f"Union: {A | B}")
+
+# List Comprehension
+kuadrat = [x**2 for x in range(5)]
+print(f"Kuadrat: {kuadrat}")` },
+            { id: 4, title: "Fungsi & Modul", sub: "def, parameter, return, import", videoId: "PLACEHOLDER_VIDEO_4", content: `
+                <h3 class="text-2xl font-bold mb-4">Modul 4: Fungsi & Modul</h3>
+                <p class="mb-4">Fungsi memungkinkan kita membungkus logika menjadi blok kode yang dapat digunakan kembali.</p>
+                
+                <h4 class="font-bold text-lg mt-6 mb-2">1. Mendefinisikan Fungsi</h4>
+                <p class="mb-2">Gunakan keyword <code>def</code> diikuti nama fungsi dan parameter.</p>
+                <pre><code>def sapa(nama):
+    """Docstring: Fungsi untuk menyapa"""
+    print(f"Halo, {nama}!")
+
+# Memanggil fungsi
+sapa("Beryl")  # Output: Halo, Beryl!</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">2. Parameter dan Return Value</h4>
+                <pre><code>def luas_persegi_panjang(panjang, lebar):
+    """Menghitung luas persegi panjang"""
+    luas = panjang * lebar
+    return luas
+
+# Menggunakan return value
+hasil = luas_persegi_panjang(5, 3)
+print(f"Luas: {hasil}")  # Output: Luas: 15</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">3. Default Parameter</h4>
+                <pre><code>def pangkat(angka, eksponen=2):
+    return angka ** eksponen
+
+print(pangkat(5))      # Output: 25 (default eksponen=2)
+print(pangkat(2, 3))   # Output: 8 (eksponen=3)</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">4. Arbitrary Arguments (*args, **kwargs)</h4>
+                <pre><code># *args untuk arbitrary positional arguments
+def jumlahkan(*args):
+    return sum(args)
+
+print(jumlahkan(1, 2, 3, 4))  # Output: 10
+
+# **kwargs untuk arbitrary keyword arguments
+def tampilkan_info(**kwargs):
+    for key, value in kwargs.items():
+        print(f"{key}: {value}")
+
+tampilkan_info(nama="Beryl", umur=23, jurusan="Elektro")</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">5. Lambda Function</h4>
+                <p class="mb-2">Fungsi anonim satu baris untuk operasi sederhana.</p>
+                <pre><code># Fungsi biasa
+def kuadrat(x):
+    return x ** 2
+
+# Lambda equivalent
+kuadrat = lambda x: x ** 2
+print(kuadrat(5))  # Output: 25
+
+# Lambda dengan map
+angka = [1, 2, 3, 4]
+kuadrat_list = list(map(lambda x: x**2, angka))
+print(kuadrat_list)  # [1, 4, 9, 16]</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">6. Import Modul</h4>
+                <pre><code># Import seluruh modul
+import math
+print(math.sqrt(16))  # Output: 4.0
+
+# Import spesifik
+from math import pi, sin
+print(pi)  # Output: 3.14159...
+
+# Import dengan alias
+import numpy as np
+import pandas as pd</code></pre>
+            `, quiz: [
+                { q: "Keyword apa yang digunakan untuk mendefinisikan fungsi di Python?", opts: ["func", "define", "def", "function"], ans: 2, exp: "def adalah keyword Python untuk mendefinisikan fungsi." },
+                { q: "Apa output dari:<br><code>def kali(a, b=2):<br>&nbsp;&nbsp;return a * b<br>print(mkali(5))</code>", opts: ["5", "10", "Error", "2"], ans: 1, exp: "Parameter b memiliki default value 2, jadi kali(5) = 5 * 2 = 10." },
+                { q: "Lambda function di Python digunakan untuk...", opts: ["Membuat loop", "Fungsi anonim satu baris", "Import modul", "Menangani exception"], ans: 1, exp: "Lambda adalah fungsi anonim yang ditulis dalam satu baris, biasanya untuk operasi sederhana." }
+            ], snippet: `# Fungsi dan Modul
+
+# Fungsi dengan return
+def hitung_luas_lingkaran(r):
+    phi = 3.14159
+    return phi * r ** 2
+
+luas = hitung_luas_lingkaran(7)
+print(f"Luas lingkaran: {luas:.2f}")
+
+# Fungsi dengan default parameter
+def greet(nama, salam="Halo"):
+    print(f"{salam}, {nama}!")
+
+greet("Beryl")
+greet("Citra", "Selamat pagi")
+
+# Lambda function
+kuadrat = lambda x: x ** 2
+print(f"5^2 = {kuadrat(5)}")
+
+# Import modul standar
+import math
+print(f"Akar dari 81 = {math.sqrt(81)}")` },
+            { id: 5, title: "OOP Dasar", sub: "class, object, __init__, inheritance", videoId: "PLACEHOLDER_VIDEO_5", content: `
+                <h3 class="text-2xl font-bold mb-4">Modul 5: OOP Dasar</h3>
+                <p class="mb-4">Object-Oriented Programming (OOP) adalah paradigma pemrograman berbasis objek yang mengandung data dan metode.</p>
+                
+                <h4 class="font-bold text-lg mt-6 mb-2">1. Class dan Object</h4>
+                <p class="mb-2">Class adalah blueprint, object adalah instance dari class.</p>
+                <pre><code>class Mahasiswa:
+    pass  # Class kosong
+
+# Membuat object
+mhs1 = Mahasiswa()
+mhs2 = Mahasiswa()</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">2. Constructor (__init__) dan self</h4>
+                <pre><code>class Mahasiswa:
+    def __init__(self, nama, nim):
+        self.nama = nama  # Attribute
+        self.nim = nim
+    
+    def sapa(self):  # Method
+        return f"Halo, saya {self.nama}"
+
+# Instance object
+mhs = Mahasiswa("Beryl", "H14123001")
+print(mhs.nama)  # Output: Beryl
+print(mhs.sapa())  # Output: Halo, saya Beryl</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">3. Inheritance (Pewarisan)</h4>
+                <p class="mb-2">Class child dapat mewarisi attribute dan method dari class parent.</p>
+                <pre><code>class Person:
+    def __init__(self, nama):
+        self.nama = nama
+    
+    def sapa(self):
+        return f"Halo, saya {self.nama}"
+
+class Mahasiswa(Person):  # Inherits from Person
+    def __init__(self, nama, nim):
+        super().__init__(nama)  # Call parent constructor
+        self.nim = nim
+    
+    # Override method parent
+    def sapa(self):
+        return f"Halo, saya {self.nama}, NIM {self.nim}"
+
+mhs = Mahasiswa("Beryl", "H14123001")
+print(mhs.sapa())  # Output: Halo, saya Beryl, NIM H14123001</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">4. Encapsulation (Attribute Private)</h4>
+                <pre><code>class RekeningBank:
+    def __init__(self, saldo_awal):
+        self.__saldo = saldo_awal  # Private attribute
+    
+    def setor(self, jumlah):
+        self.__saldo += jumlah
+    
+    def tarik(self, jumlah):
+        if jumlah <= self.__saldo:
+            self.__saldo -= jumlah
+            return True
+        return False
+    
+    def cek_saldo(self):
+        return self.__saldo
+
+rek = RekeningBank(1000000)
+rek.setor(500000)
+print(f"Saldo: Rp {rek.cek_saldo():,}")</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">5. Class Variable vs Instance Variable</h4>
+                <pre><code>class Circuit:
+    jenis = "Elektronika"  # Class variable (shared)
+    
+    def __init__(self, v, r):
+        self.v = v  # Instance variable
+        self.r = r
+    
+    def arus(self):
+        return self.v / self.r
+
+c1 = Circuit(12, 4)
+c2 = Circuit(9, 3)
+
+print(c1.jenis)  # Elektronika (shared)
+print(c2.jenis)  # Elektronika (shared)
+print(f"Arus c1: {c1.arus()} A")  # 3.0 A
+print(f"Arus c2: {c2.arus()} A")  # 3.0 A</code></pre>
+            `, quiz: [
+                { q: "Method khusus yang otomatis dipanggil saat membuat object baru disebut...", opts: ["__start__", "__create__", "__init__", "__new__"], ans: 2, exp: "__init__ adalah constructor method yang dipanggil otomatis saat instance object dibuat." },
+                { q: "Keyword 'self' dalam class Python merujuk pada...", opts: ["Class itu sendiri", "Object/instance saat ini", "Parent class", "Module"], ans: 1, exp: "self adalah referensi ke instance object saat ini, digunakan untuk mengakses attribute dan method dalam class." },
+                { q: "Untuk membuat attribute private di Python, kita menggunakan...", opts: ["private keyword", "underscore ganda (__)", "protected keyword", "secret keyword"], ans: 1, exp: "Double underscore prefix (__nama) membuat attribute private yang tidak bisa diakses langsung dari luar class." }
+            ], snippet: `# OOP Dasar di Python
+
+class Circuit:
+    """Class untuk menghitung rangkaian listrik sederhana"""
+    
+    def __init__(self, voltage, resistance):
+        self.voltage = voltage
+        self.resistance = resistance
+    
+    def current(self):
+        """Hitung arus menggunakan Hukum Ohm: I = V/R"""
+        return self.voltage / self.resistance
+    
+    def power(self):
+        """Hitung daya: P = V * I"""
+        return self.voltage * self.current()
+
+# Buat instance
+rangkaian = Circuit(12, 4)
+print(f"Tegangan: {rangkaian.voltage} V")
+print(f"Hambatan: {rangkaian.resistance} Ω")
+print(f"Arus: {rangkaian.current()} A")
+print(f"Daya: {rangkaian.power()} W")
+
+# Inheritance contoh
+class Resistor(Circuit):
+    def __init__(self, v, r, toleransi):
+        super().__init__(v, r)
+        self.toleransi = toleransi
+    
+    def info(self):
+        return f"Resistor {self.resistance}Ω ±{self.toleransi}%"
+
+res = Resistor(5, 100, 5)
+print(res.info())` },
+            { id: 6, title: "File & Error Handling", sub: "CSV, TXT, try/except, context manager", videoId: "PLACEHOLDER_VIDEO_6", content: `
+                <h3 class="text-2xl font-bold mb-4">Modul 6: File & Error Handling</h3>
+                <p class="mb-4">Mempelajari cara membaca/menulis file dan menangani error dengan baik.</p>
+                
+                <h4 class="font-bold text-lg mt-6 mb-2">1. Membaca File TXT</h4>
+                <pre><code># Cara tradisional (harus close manual)
+file = open("data.txt", "r")
+isi = file.read()
+file.close()
+
+# Cara Pythonic dengan context manager (recommended!)
+with open("data.txt", "r") as file:
+    isi = file.read()
+    print(isi)
+
+# Baca per baris
+with open("data.txt", "r") as file:
+    for baris in file:
+        print(baris.strip())  # strip() hapus newline</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">2. Menulis File</h4>
+                <pre><code># Mode 'w' = write (overwrite jika ada)
+with open("output.txt", "w") as file:
+    file.write("Baris pertama\\n")
+    file.write("Baris kedua\\n")
+
+# Mode 'a' = append (tambah di akhir)
+with open("output.txt", "a") as file:
+    file.write("Baris ketiga\\n")</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">3. Membaca File CSV</h4>
+                <pre><code>import csv
+
+# Baca CSV sebagai list
+with open("data.csv", "r") as file:
+    reader = csv.reader(file)
+    for row in reader:
+        print(row)
+
+# Baca CSV sebagai dictionary
+with open("data.csv", "r") as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        print(row['nama'], row['nilai'])</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">4. Error Handling (try/except)</h4>
+                <pre><code># Menangkap exception dasar
+try:
+    hasil = 10 / 0
+except ZeroDivisionError:
+    print("Error: Tidak bisa bagi dengan nol!")
+
+# Multiple exceptions
+try:
+    angka = int(input("Masukkan angka: "))
+    hasil = 10 / angka
+except ValueError:
+    print("Error: Input harus angka!")
+except ZeroDivisionError:
+    print("Error: Tidak bisa bagi dengan nol!")
+
+# Generic exception
+try:
+    # Kode berisiko
+    pass
+except Exception as e:
+    print(f"Terjadi error: {e}")</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">5. Finally Block</h4>
+                <p class="mb-2">Block finally selalu dieksekusi, apapun yang terjadi.</p>
+                <pre><code>try:
+    file = open("data.txt", "r")
+    isi = file.read()
+except FileNotFoundError:
+    print("File tidak ditemukan!")
+finally:
+    file.close()  # Selalu dijalankan
+    print("File ditutup.")</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">6. Raise Exception</h4>
+                <pre><code>def validasi_usia(usia):
+    if usia < 0:
+        raise ValueError("Usia tidak boleh negatif!")
+    if usia > 150:
+        raise ValueError("Usia tidak realistis!")
+    return True
+
+try:
+    validasi_usia(-5)
+except ValueError as e:
+    print(f"Validasi gagal: {e}")</code></pre>
+            `, quiz: [
+                { q: "Mode file apa yang digunakan untuk menambahkan data di akhir file tanpa menghapus isi sebelumnya?", opts: ["'r'", "'w'", "'a'", "'x'"], ans: 2, exp: "Mode 'a' (append) menambahkan data di akhir file tanpa menghapus konten yang sudah ada." },
+                { q: "Apa keuntungan menggunakan 'with' statement saat membuka file?", opts: ["Lebih cepat", "File otomatis ditutup", "Bisa baca lebih banyak data", "Tidak perlu import"], ans: 1, exp: "Context manager 'with' memastikan file ditutup otomatis bahkan jika terjadi error." },
+                { q: "Block yang selalu dieksekusi dalam try-except, apapun yang terjadi, adalah...", opts: ["else", "finally", "catch", "ensure"], ans: 1, exp: "finally block selalu dijalankan, baik terjadi exception atau tidak, berguna untuk cleanup resources." }
+            ], snippet: `# File & Error Handling
+
+# Contoh error handling
+def bagi(a, b):
+    try:
+        hasil = a / b
+        return hasil
+    except ZeroDivisionError:
+        return "Error: Tidak bisa bagi dengan nol!"
+    except TypeError:
+        return "Error: Input harus angka!"
+
+print(f"10 / 2 = {bagi(10, 2)}")
+print(f"10 / 0 = {bagi(10, 0)}")
+print(f"10 / 'x' = {bagi(10, 'x')}")
+
+# Simulasi baca file (di playground, gunakan string)
+data_csv = """nama,nilai,andi,85
+beryl,92
+citra,78"""
+
+# Parse manual seperti CSV
+for baris in data_csv.split('\\n'):
+    parts = baris.split(',')
+    if len(parts) == 2:
+        print(f"Nama: {parts[0]}, Nilai: {parts[1]}")
+
+# Context manager simulation
+class FakeFile:
+    def __enter__(self):
+        print("File dibuka")
+        return self
+    def __exit__(self, *args):
+        print("File ditutup")
+    def read(self):
+        return "Isi file simulasi"
+
+with FakeFile() as f:
+    print(f.read())` },
+            { id: 7, title: "Olah Data dengan Pandas", sub: "DataFrame, Series, filtering, groupby, merge", videoId: "PLACEHOLDER_VIDEO_7", content: `
+                <h3 class="text-2xl font-bold mb-4">Modul 7: Olah Data dengan Pandas</h3>
+                <p class="mb-4">Pandas adalah library Python untuk manipulasi dan analisis data tabular.</p>
+                
+                <h4 class="font-bold text-lg mt-6 mb-2">1. Membuat DataFrame</h4>
+                <pre><code>import pandas as pd
+
+# Dari dictionary
+data = {
+    'Nama': ['Andi', 'Beryl', 'Citra', 'Doni'],
+    'Nilai': [85, 92, 78, 88],
+    'Jurusan': ['Elektro', 'Mesin', 'Elektro', 'Informatika']
+}
+
+df = pd.DataFrame(data)
+print(df)
+
+# Akses kolom
+print(df['Nama'])
+print(df[['Nama', 'Nilai']])
+
+# Akses baris dengan loc (label) dan iloc (index)
+print(df.loc[0])      # Baris pertama
+print(df.iloc[0:2])   # Dua baris pertama</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">2. Statistik Deskriptif</h4>
+                <pre><code># Statistik dasar
+print(df.describe())  # Count, mean, std, min, max
+print(df['Nilai'].mean())   # Rata-rata
+print(df['Nilai'].median()) # Median
+print(df['Nilai'].std())    # Standar deviasi</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">3. Filtering Data</h4>
+                <pre><code># Filter baris
+lulus = df[df['Nilai'] >= 80]
+elektro = df[df['Jurusan'] == 'Elektro']
+
+# Multiple conditions
+lulus_elektro = df[(df['Nilai'] >= 80) & (df['Jurusan'] == 'Elektro')]
+lulus_atau_elektro = df[(df['Nilai'] >= 80) | (df['Jurusan'] == 'Elektro')]</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">4. GroupBy</h4>
+                <pre><code># Group by jurusan dan hitung rata-rata nilai
+grouped = df.groupby('Jurusan')['Nilai'].mean()
+print(grouped)
+
+# Multiple aggregations
+grouped_agg = df.groupby('Jurusan').agg({
+    'Nilai': ['mean', 'min', 'max', 'count']
+})
+print(grouped_agg)</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">5. Menambah/Mengubah Kolom</h4>
+                <pre><code># Tambah kolom baru
+df['Lulus'] = df['Nilai'] >= 75
+
+# Ubah nilai berdasarkan kondisi
+df.loc[df['Nilai'] < 75, 'Status'] = 'Remedial'
+df.loc[df['Nilai'] >= 75, 'Status'] = 'Lulus'</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">6. Merge/Join DataFrame</h4>
+                <pre><code>df1 = pd.DataFrame({'id': [1, 2, 3], 'nama': ['A', 'B', 'C']})
+df2 = pd.DataFrame({'id': [1, 2, 4], 'nilai': [80, 90, 85]})
+
+# Inner join
+merged = pd.merge(df1, df2, on='id', how='inner')
+print(merged)  # Hanya id yang ada di kedua df</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">7. Handle Missing Values</h4>
+                <pre><code># Cek missing values
+print(df.isnull().sum())
+
+# Drop rows dengan NaN
+df_clean = df.dropna()
+
+# Fill missing values
+df_filled = df.fillna(0)  # Isi dengan 0
+df_filled = df.fillna(df['Nilai'].mean())  # Isi dengan mean</code></pre>
+            `, quiz: [
+                { q: "Library Python yang khusus digunakan untuk manipulasi data tabular adalah...", opts: ["NumPy", "Pandas", "Matplotlib", "Scikit-learn"], ans: 1, exp: "Pandas adalah library khusus untuk data manipulation dan analysis dengan struktur DataFrame." },
+                { q: "Method untuk menampilkan statistik deskriptif (mean, std, min, max) dari DataFrame adalah...", opts: ["stats()", "describe()", "summary()", "info()"], ans: 1, exp: "describe() menampilkan statistik deskriptif lengkap untuk kolom numerik." },
+                { q: "Untuk filter baris dimana Nilai >= 80, syntax yang benar adalah...", opts: ["df.filter(Nilai >= 80)", "df[Nilai >= 80]", "df[df['Nilai'] >= 80]", "df.where(Nilai >= 80)"], ans: 2, exp: "Syntax boolean indexing di Pandas: df[df['kolom'] >= value]" }
+            ], snippet: `import pandas as pd
+
+# Membuat DataFrame
+data = {
+    'Nama': ['Andi', 'Beryl', 'Citra', 'Doni'],
+    'Nilai': [85, 92, 78, 88],
+    'Jurusan': ['Elektro', 'Mesin', 'Elektro', 'Informatika']
+}
+
+df = pd.DataFrame(data)
+print("=== DataFrame ===")
+print(df)
+
+print("\\n=== Statistik Deskriptif ===")
+print(df.describe())
+
+print("\\n=== Filter Nilai >= 80 ===")
+lulus = df[df['Nilai'] >= 80]
+print(lulus)
+
+print("\\n=== Group By Jurusan ===")
+grouped = df.groupby('Jurusan')['Nilai'].mean()
+print(grouped)
+
+print("\\n=== Rata-rata Nilai ===")
+print(f"Mean: {df['Nilai'].mean():.2f}")` },
+            { id: 8, title: "Visualisasi Data", sub: "Matplotlib, Seaborn, line chart, bar chart, scatter plot", videoId: "PLACEHOLDER_VIDEO_8", content: `
+                <h3 class="text-2xl font-bold mb-4">Modul 8: Visualisasi Data</h3>
+                <p class="mb-4">Visualisasi membantu memahami pola dan insight dari data yang kompleks.</p>
+                
+                <h4 class="font-bold text-lg mt-6 mb-2">1. Matplotlib Dasar</h4>
+                <pre><code>import matplotlib.pyplot as plt
+
+# Data
+x = [1, 2, 3, 4, 5]
+y = [2, 4, 6, 8, 10]
+
+# Line plot
+plt.figure(figsize=(8, 4))
+plt.plot(x, y, marker='o', linewidth=2, color='blue')
+plt.title('Grafik Linear')
+plt.xlabel('X-axis')
+plt.ylabel('Y-axis')
+plt.grid(True)
+plt.show()</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">2. Bar Chart</h4>
+                <pre><code>kategori = ['A', 'B', 'C', 'D']
+nilai = [25, 40, 30, 55]
+
+plt.figure(figsize=(8, 4))
+plt.bar(kategori, nilai, color=['red', 'green', 'blue', 'orange'])
+plt.title('Bar Chart Contoh')
+plt.xlabel('Kategori')
+plt.ylabel('Nilai')
+plt.show()</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">3. Scatter Plot</h4>
+                <pre><code># Hubungan antara dua variabel
+tinggi = [160, 165, 170, 175, 180]
+berat = [55, 60, 68, 75, 82]
+
+plt.figure(figsize=(6, 6))
+plt.scatter(tinggi, berat, alpha=0.6, c='purple')
+plt.title('Scatter Plot: Tinggi vs Berat')
+plt.xlabel('Tinggi (cm)')
+plt.ylabel('Berat (kg)')
+plt.grid(True, alpha=0.3)
+plt.show()</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">4. Histogram</h4>
+                <pre><code># Distribusi frekuensi
+import numpy as np
+data = np.random.randn(1000)  # 1000 data random normal
+
+plt.figure(figsize=(8, 4))
+plt.hist(data, bins=30, edgecolor='black', alpha=0.7)
+plt.title('Histogram Distribusi Normal')
+plt.xlabel('Value')
+plt.ylabel('Frequency')
+plt.show()</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">5. Pie Chart</h4>
+                <pre><code>labels = ['Elektro', 'Mesin', 'Informatika', 'Sipil']
+sizes = [30, 25, 35, 10]
+colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99']
+
+plt.figure(figsize=(6, 6))
+plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%')
+plt.title('Distribusi Mahasiswa per Jurusan')
+plt.axis('equal')  # Pastikan pie bulat sempurna
+plt.show()</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">6. Subplot (Multiple Plots)</h4>
+                <pre><code>fig, axes = plt.subplots(2, 2, figsize=(10, 8))
+
+axes[0, 0].plot([1, 2, 3], [1, 4, 9])
+axes[0, 0].set_title('Line')
+
+axes[0, 1].bar(['A', 'B'], [5, 7])
+axes[0, 1].set_title('Bar')
+
+axes[1, 0].scatter([1, 2, 3], [2, 4, 6])
+axes[1, 0].set_title('Scatter')
+
+axes[1, 1].hist([1, 2, 2, 3, 3, 3], bins=3)
+axes[1, 1].set_title('Histogram')
+
+plt.tight_layout()
+plt.show()</code></pre>
+
+                <h4 class="font-bold text-lg mt-6 mb-2">7. Menyimpan Gambar</h4>
+                <pre><code>plt.plot([1, 2, 3], [1, 4, 9])
+plt.savefig('grafik.png', dpi=300, bbox_inches='tight')
+# Gambar tersimpan sebagai file PNG</code></pre>
+
+                <p class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-card text-sm">
+                    <strong>Catatan:</strong> Di Code Playground berbasis browser (Pyodide), plot tidak akan tampil visual karena keterbatasan GUI WebAssembly. Namun kode tetap valid dan bisa dijalankan di environment Python lokal (Jupyter, VS Code, dll).
+                </p>
+            `, quiz: [
+                { q: "Library Python yang paling umum digunakan untuk visualisasi data adalah...", opts: ["Pandas", "NumPy", "Matplotlib", "Requests"], ans: 2, exp: "Matplotlib adalah library plotting fundamental di Python untuk membuat berbagai jenis visualisasi." },
+                { q: "Fungsi untuk menampilkan grafik di Matplotlib adalah...", opts: ["display()", "show()", "render()", "plot()"], ans: 1, exp: "plt.show() menampilkan semua figure yang telah dibuat." },
+                { q: "Untuk membuat subplot 2x2 (2 baris, 2 kolom), syntax yang benar adalah...", opts: ["plt.subplot(2, 2)", "plt.subplots(2, 2)", "plt.multiplot(2, 2)", "plt.grid(2, 2)"], ans: 1, exp: "plt.subplots(rows, cols) membuat multiple plots dalam satu figure." }
+            ], snippet: `import matplotlib.pyplot as plt
+
+# Catatan: Plot tidak akan tampil di playground browser
+# karena keterbatasan GUI WebAssembly.
+# Kode ini valid dan akan bekerja di Jupyter/VS Code.
+
+# Data contoh
+bulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei']
+penjualan = [120, 150, 180, 220, 250]
+
+# Setup figure
+plt.figure(figsize=(8, 4))
+
+# Line plot
+plt.plot(bulan, penjualan, marker='o', linewidth=2, color='green')
+
+# Customize
+plt.title('Penjualan per Bulan', fontsize=14, fontweight='bold')
+plt.xlabel('Bulan')
+plt.ylabel('Penjualan (unit)')
+plt.grid(True, alpha=0.3)
+
+# Simpan (tidak display di browser)
+# plt.savefig('penjualan.png', dpi=300)
+
+print("Kode visualisasi siap!")
+print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk melihat grafik.")` }
         ];
 
         // ==========================================

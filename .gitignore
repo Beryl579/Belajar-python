@@ -1,31 +1,3 @@
-# OS Generated Files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-Desktop.ini
+(index.html is a source file, so no changes needed to .gitignore)
 
-# Editor & IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Dependencies (Antisipasi jika migrasi ke Node.js/React)
-node_modules/
-npm-debug.log
-yarn-error.log
-
-# Environment Variables (Jika nanti menggunakan API Key untuk AI Tutor)
-.env
-.env.local
-.env.production
-
-# Build Output (Jika nanti menggunakan build tools)
-dist/
-build/
-.cache/
+# No changes required - index.html is a source file and should not be ignored
