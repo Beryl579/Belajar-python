@@ -1413,7 +1413,8 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + AI_API_KEY
                     },
-                    body: JSON.stringify({
+                    mode: 'cors',
+                        body: JSON.stringify({
                         model: AI_MODEL,
                         messages: aiChatHistory.slice(-10),
                         max_tokens: 1024,
@@ -1447,7 +1448,7 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
                 if (loadingEl) loadingEl.remove();
                 
                 // Fallback to helpful message
-                var reply = 'Maaf, terjadi error: ' + error.message + '. Coba lagi nanti atau cek koneksi internet.';
+                var reply = 'Error: ' + error.message + '. Jika ini masalah CORS, coba buka di browser lain atau matikan CORS extension.';
                 chat.innerHTML += '<div class="flex justify-start"><div class="bg-white border border-gray-200 p-3 rounded-lg max-w-[80%] shadow-sm"><p class="font-semibold text-py-accent text-xs">PyMate</p>' + reply + '</div></div>';
             }
             
