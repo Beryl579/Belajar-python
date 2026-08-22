@@ -1352,6 +1352,50 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
             document.getElementById('output').innerText = "Menunggu eksekusi...";
         }
 
+        function shareCode() {
+            var code = document.getElementById('code-editor').value;
+            if (!code.trim()) return;
+            var enc = btoa(unescape(encodeURIComponent(code)));
+            var url = window.location.origin + window.location.pathname + '#code=' + enc;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(function() { alert('Link kode sudah di-copy!'); });
+            } else {
+                prompt('Copy link ini:', url);
+            }
+        }
+
+        async function reviewCode() {
+            var code = document.getElementById('code-editor').value;
+            if (!code.trim()) { alert('Tulis kode dulu!'); return; }
+            var chat = document.getElementById('ai-chat');
+            var btn = document.getElementById('btn-review');
+            btn.disabled = true; btn.textContent = '⏳ Reviewing...';
+            document.getElementById('ai-window').classList.remove('hidden');
+            chat.innerHTML += '<div class="flex justify-end"><div class="bg-purple-600 text-white p-3 rounded-lg max-w-[80%] text-sm">Review kode ini</div></div>';
+            chat.scrollTop = chat.scrollHeight;
+
+            try {
+                var response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: [
+                            {role: 'system', content: 'You are PyMate, a Python code reviewer. Review the user code and give feedback in Bahasa Indonesia. Be concise. Format: 1) Ringkasan kode, 2) Masalah/perbaikan, 3) Saran penulisan kode. Use HTML bold for emphasis.'},
+                            {role: 'user', content: 'Review kode Python ini:\n\n' + code}
+                        ]
+                    })
+                });
+                var data = await response.json();
+                var reply = data.choices && data.choices[0] ? data.choices[0].message.content : 'Tidak ada respons dari AI.';
+                var formatted = reply.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 rounded text-sm">$1</code>').replace(/\n/g, '<br>');
+                chat.innerHTML += '<div class="flex justify-start"><div class="bg-white border border-purple-200 p-3 rounded-lg max-w-[85%] shadow-sm text-sm"><p class="font-semibold text-purple-700 text-xs mb-1">PyMate Review</p>' + formatted + '</div></div>';
+            } catch (e) {
+                chat.innerHTML += '<div class="flex justify-start"><div class="bg-red-50 border border-red-200 p-3 rounded-lg max-w-[80%] shadow-sm text-sm"><p class="font-semibold text-red-700 text-xs mb-1">Error</p>Gagal mereview kode. ' + e.message + '</div></div>';
+            }
+            chat.scrollTop = chat.scrollHeight;
+            btn.disabled = false; btn.textContent = '🤖 Review';
+        }
+
         function saveState() {
             localStorage.setItem('pylab_completed', JSON.stringify(state.modulesCompleted));
             localStorage.setItem('pylab_scores', JSON.stringify(state.quizScores));
