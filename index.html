@@ -1378,9 +1378,9 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
         }
 
                 // xKiro API Configuration
-        var AI_API_KEY = 'sk-xt-7cfd22574a1978e7fbce3faab1b5743b472b2f913e3cec10';
-        var AI_BASE_URL = 'https://api.xkiro.com/v1';
-        var AI_MODEL = 'qwen/qwen3.8-max';
+        // API key is now on server side (Vercel serverless function)
+        
+        
         
         // Chat history for context
         var aiChatHistory = [
@@ -1407,11 +1407,10 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
             chat.scrollTop = chat.scrollHeight;
 
             try {
-                var response = await fetch('https://corsproxy.io/?' + encodeURIComponent(AI_BASE_URL + '/chat/completions'), {
+                var response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + AI_API_KEY
+                        'Content-Type': 'application/json'
                     },
                     mode: 'cors',
                         body: JSON.stringify({
