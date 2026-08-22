@@ -29,13 +29,15 @@
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 8px; overflow-x: auto; font-family: 'Fira Code', monospace; }
+        #output { color: #1f2937; background: #f3f4f6; }
+        [data-theme="dark"] #output { color: #e2e8f0; background: #1e293b; }
         code { font-family: 'Fira Code', monospace; }
     </style>
 </head>
 <body class="text-gray-800">
 
     <!-- Hamburger Menu Button (Mobile Only) -->
-    <button id="mobile-menu-btn" class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-py-dark text-white rounded-lg shadow-lg">
+    <button id="mobile-menu-btn" class="lg:hidden fixed top-4 left-4 z-50 w-12 h-12 flex items-center justify-center bg-py-dark text-white rounded-xl shadow-lg text-xl" aria-label="Toggle navigation">
         ☰
     </button>
 
@@ -46,13 +48,13 @@
     <div class="flex h-screen overflow-hidden">
         
         <!-- Sidebar -->
-        <aside id="sidebar" class="w-64 bg-py-dark text-white flex flex-col fixed h-full z-20 shadow-xl lg:translate-x-0 -translate-x-full transition-transform duration-300">
-            <div class="p-6 border-b border-white/10 flex justify-between items-center">
+        <aside id="sidebar" class="w-64 bg-py-dark text-white flex flex-col fixed h-full z-40 shadow-xl lg:translate-x-0 -translate-x-full transition-transform duration-300">
+            <div class="pl-16 lg:pl-6 pr-6 py-6 border-b border-white/10 flex justify-between items-center">
                 <div>
                     <h1 class="text-2xl font-bold text-white">PyLab</h1>
                     <p class="text-xs text-green-300 mt-1">Kelas Python Mandiri</p>
                 </div>
-                <button id="close-sidebar-btn" class="lg:hidden text-white/70 hover:text-white" onclick="toggleMobileMenu()">✕</button>
+                <button id="close-sidebar-btn" class="lg:hidden w-10 h-10 flex items-center justify-center text-white/70 hover:text-white rounded-lg" onclick="toggleMobileMenu()">✕</button>
             </div>
             
             <nav class="flex-1 overflow-y-auto scrollbar-hide py-4">
@@ -79,6 +81,7 @@
                 <a href="#" data-view="videos" onclick="navigate('videos'); if(window.innerWidth < 1024) toggleMobileMenu();" class="flex items-center px-6 py-3 text-white hover:bg-py-dark-hover">
                     <span class="mr-3">🎬</span> Video Library
                 </a>
+                <div class="px-4 pt-3 pb-1"><button onclick="openSearch()" class="w-full px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm text-white/70 flex items-center gap-2 transition"><span>&#x1f50d;</span> Cari syntax, modul...</button></div>
             </nav>
             
             <div class="p-4 border-t border-white/10 text-xs text-green-300 text-center">
@@ -87,13 +90,13 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 ml-0 lg:ml-64 overflow-y-auto transition-all duration-300">
+        <main class="flex-1 ml-0 lg:ml-64 overflow-y-auto transition-all duration-300 pt-16 lg:pt-0">
             
             <!-- VIEW: DASHBOARD -->
             <div id="view-dashboard" class="view p-8">
                 <div class="mb-6">
                     <span class="inline-block px-3 py-1 bg-green-100 text-py-accent text-xs font-semibold rounded-full mb-4">🐍 Interaktif · Gratis</span>
-                    <h2 class="text-4xl font-extrabold text-gray-900 leading-tight">
+                    <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 leading-tight">
                         Kuasai Python, dari <span class="text-py-accent">baris kode pertama</span> sampai siap olah data.
                     </h2>
                     <p class="text-gray-600 mt-4 max-w-2xl">
@@ -101,7 +104,7 @@
                     </p>
                 </div>
 
-                <div class="flex gap-4 mb-8">
+                <div class="flex flex-wrap gap-3 sm:gap-4 mb-8">
                     <button onclick="openModule(1)" class="px-6 py-3 bg-py-accent hover:bg-green-700 text-white font-semibold rounded-card shadow-lg transition">▶ Mulai Modul 1</button>
                     <button onclick="navigate('playground')" class="px-6 py-3 bg-white border-2 border-py-accent text-py-accent hover:bg-green-50 font-semibold rounded-card transition">🎮 Coba Code Playground</button>
                 </div>
@@ -137,6 +140,11 @@ print(df['Nilai'].mean())
                             <p class="text-2xl font-bold mt-1" id="stat-avg">—</p>
                             <p class="text-xs text-gray-400 mt-3">Dari seluruh kuis modul</p>
                         </div>
+                        <div class="bg-white rounded-card shadow-sm border border-gray-100 p-5 sm:col-span-2 lg:col-span-3"><div class="flex flex-wrap gap-6">
+                            <div><p class="text-xs text-gray-500 font-semibold uppercase">🔥 Streak</p><p class="text-2xl font-bold mt-1" id="stat-streak">0</p></div>
+                            <div><p class="text-xs text-gray-500 font-semibold uppercase">⏱ Waktu</p><p class="text-2xl font-bold mt-1" id="stat-time">0m</p></div>
+                            <div><p class="text-xs text-gray-500 font-semibold uppercase">📅 Hari Ini</p><p class="text-2xl font-bold mt-1" id="stat-today">—</p></div>
+                        </div></div>
                     </div>
                 </div>
 
@@ -166,7 +174,7 @@ print(df['Nilai'].mean())
 
             <!-- VIEW: PLAYGROUND -->
             <div id="view-playground" class="view hidden p-8">
-                <h2 class="text-3xl font-bold mb-2">Code Playground</h2>
+                <h2 class="text-2xl sm:text-3xl font-bold mb-2">Code Playground</h2>
                 <p class="text-gray-600 mb-6">Tulis kode Python di bawah ini. Kode dieksekusi secara lokal di browser Anda menggunakan Pyodide (WebAssembly).</p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-[600px]">
@@ -177,9 +185,11 @@ print("Versi Python:", sys.version)
 
 data = [10, 20, 30, 40]
 print("Rata-rata:", sum(data)/len(data))</textarea>
-                        <div class="mt-4 flex gap-3">
-                            <button onclick="runCode()" id="btn-run" class="px-5 py-2 bg-py-accent text-white font-semibold rounded-lg hover:bg-green-700 disabled:opacity-50">▶ Run Code</button>
+                        <div class="mt-4 flex flex-wrap gap-3">
+                            <button onclick="runCode()" id="btn-run" class="px-5 py-2 bg-py-accent text-white font-semibold rounded-lg hover:bg-green-700 disabled:opacity-50">▶ Run</button>
+                            <button onclick="reviewCode()" id="btn-review" class="px-5 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 disabled:opacity-50">🤖 Review</button>
                             <button onclick="resetCode()" class="px-5 py-2 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-100">Reset</button>
+                            <button onclick="shareCode()" class="px-5 py-2 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-100">🔗 Share</button>
                         </div>
                     </div>
                     <div class="flex flex-col">
@@ -192,7 +202,7 @@ print("Rata-rata:", sum(data)/len(data))</textarea>
             <!-- VIEW: MODUL -->
             <div id="view-module" class="view hidden p-8 max-w-4xl mx-auto">
                 <button onclick="navigate('dashboard')" class="text-py-accent hover:underline mb-4 flex items-center">← Kembali ke Dashboard</button>
-                <div id="module-content" class="bg-white rounded-card shadow-sm p-8 border border-gray-100">
+                <div id="module-content" class="bg-white rounded-card shadow-sm p-4 sm:p-8 border border-gray-100 overflow-x-hidden">
                     <!-- Konten diisi dinamis via JS -->
                 </div>
             </div>
@@ -206,7 +216,7 @@ print("Rata-rata:", sum(data)/len(data))</textarea>
             <!-- VIEW: VIDEO LIBRARY -->
             <div id="view-videos" class="view hidden p-8">
                 <div class="mb-6">
-                    <h2 class="text-3xl font-bold mb-2">🎬 Video Library</h2>
+                    <h2 class="text-2xl sm:text-3xl font-bold mb-2">🎬 Video Library</h2>
                     <p class="text-gray-600">Kumpulan video pembelajaran untuk setiap modul.</p>
                 </div>
                 
@@ -233,7 +243,7 @@ print("Rata-rata:", sum(data)/len(data))</textarea>
             <!-- VIEW: CHEAT SHEET -->
             <div id="view-cheatsheet" class="view hidden p-8">
                 <div class="mb-6">
-                    <h2 class="text-3xl font-bold mb-2">📄 Cheat Sheet & Syntax Reference</h2>
+                    <h2 class="text-2xl sm:text-3xl font-bold mb-2">📄 Cheat Sheet & Syntax Reference</h2>
                     <p class="text-gray-600">Referensi cepat syntax Python untuk memudahkan coding Anda.</p>
                 </div>
 
@@ -245,7 +255,7 @@ print("Rata-rata:", sum(data)/len(data))</textarea>
             <!-- VIEW: UJIAN AKHIR -->
             <div id="view-exam" class="view hidden p-8 max-w-4xl mx-auto">
                 <div class="mb-6">
-                    <h2 class="text-3xl font-bold mb-2">📝 Ujian Akhir</h2>
+                    <h2 class="text-2xl sm:text-3xl font-bold mb-2">📝 Ujian Akhir</h2>
                     <p class="text-gray-600">Uji pemahaman Anda dengan 10 soal pilihan ganda dari semua modul.</p>
                 </div>
 
@@ -1367,27 +1377,83 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
             document.getElementById('ai-window').classList.toggle('hidden');
         }
 
-        function sendAI() {
-            const input = document.getElementById('ai-input');
-            const chat = document.getElementById('ai-chat');
-            const text = input.value.trim();
+                // xKiro API Configuration
+        var AI_API_KEY = 'sk-xt-7cfd22574a1978e7fbce3faab1b5743b472b2f913e3cec10';
+        var AI_BASE_URL = 'https://api.xkiro.com/v1';
+        var AI_MODEL = 'qwen/qwen3.8-max';
+        
+        // Chat history for context
+        var aiChatHistory = [
+            {role: 'system', content: 'You are PyMate, a friendly Python tutor for Indonesian students. Answer in Bahasa Indonesia when appropriate. Be concise and helpful about Python programming, data science, and coding best practices.'}
+        ];
+        
+        async function sendAI() {
+            var input = document.getElementById('ai-input');
+            var chat = document.getElementById('ai-chat');
+            var text = input.value.trim();
             if (!text) return;
 
-            chat.innerHTML += `<div class="flex justify-end"><div class="bg-py-accent text-white p-3 rounded-lg max-w-[80%]">${text}</div></div>`;
-            input.value = "";
+            // Show user message
+            chat.innerHTML += '<div class="flex justify-end"><div class="bg-py-accent text-white p-3 rounded-lg max-w-[80%]">' + text + '</div></div>';
+            input.value = '';
             chat.scrollTop = chat.scrollHeight;
 
-            setTimeout(() => {
-                let reply = "Saya belum memiliki akses ke API LLM real-time. Untuk sintaks Python, silakan coba jalankan di Code Playground atau rujuk Cheat Sheet.";
-                if (text.toLowerCase().includes('list')) reply = "List di Python dibuat dengan kurung siku: `my_list = [1, 2, 3]`. Gunakan `.append()` untuk menambah item.";
-                if (text.toLowerCase().includes('def')) reply = "Definisikan fungsi dengan `def nama_fungsi(parameter):`. Jangan lupa titik dua dan indentasi!";
+            // Add user message to history
+            aiChatHistory.push({role: 'user', content: text});
+
+            // Show loading
+            var loadingId = 'loading-' + Date.now();
+            chat.innerHTML += '<div class="flex justify-start" id="' + loadingId + '"><div class="bg-white border border-gray-200 p-3 rounded-lg max-w-[80%] shadow-sm"><p class="font-semibold text-py-accent text-xs">PyMate</p><p class="text-sm text-gray-500 animate-pulse">Mengetik...</p></div></div>';
+            chat.scrollTop = chat.scrollHeight;
+
+            try {
+                var response = await fetch(AI_BASE_URL + '/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + AI_API_KEY
+                    },
+                    body: JSON.stringify({
+                        model: AI_MODEL,
+                        messages: aiChatHistory.slice(-10),
+                        max_tokens: 1024,
+                        temperature: 0.7
+                    })
+                });
+
+                var data = await response.json();
                 
-                chat.innerHTML += `<div class="flex justify-start"><div class="bg-white border border-gray-200 p-3 rounded-lg max-w-[80%] shadow-sm"><p class="font-semibold text-py-accent text-xs">PyMate</p>${reply}</div></div>`;
-                chat.scrollTop = chat.scrollHeight;
-            }, 600);
+                // Remove loading
+                var loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
+
+                if (data.choices && data.choices[0]) {
+                    var reply = data.choices[0].message.content;
+                    aiChatHistory.push({role: 'assistant', content: reply});
+                    
+                    // Format reply
+                    var formattedReply = reply
+                        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                        .replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 rounded text-sm">$1</code>')
+                        .replace(/\n/g, '<br>');
+                    
+                    chat.innerHTML += '<div class="flex justify-start"><div class="bg-white border border-gray-200 p-3 rounded-lg max-w-[80%] shadow-sm"><p class="font-semibold text-py-accent text-xs">PyMate</p><div class="text-sm">' + formattedReply + '</div></div></div>';
+                } else {
+                    throw new Error('No response from API');
+                }
+            } catch (error) {
+                // Remove loading
+                var loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
+                
+                // Fallback to helpful message
+                var reply = 'Maaf, terjadi error: ' + error.message + '. Coba lagi nanti atau cek koneksi internet.';
+                chat.innerHTML += '<div class="flex justify-start"><div class="bg-white border border-gray-200 p-3 rounded-lg max-w-[80%] shadow-sm"><p class="font-semibold text-py-accent text-xs">PyMate</p>' + reply + '</div></div>';
+            }
+            
+            chat.scrollTop = chat.scrollHeight;
         }
 
-        // Mobile Sidebar Toggle
         function toggleMobileMenu() {
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('mobile-backdrop');
