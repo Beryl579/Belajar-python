@@ -1412,12 +1412,8 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    mode: 'cors',
-                        body: JSON.stringify({
-                        model: AI_MODEL,
-                        messages: aiChatHistory.slice(-10),
-                        max_tokens: 1024,
-                        temperature: 0.7
+                    body: JSON.stringify({
+                        messages: aiChatHistory.slice(-10)
                     })
                 });
 
