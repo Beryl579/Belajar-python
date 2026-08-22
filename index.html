@@ -1407,7 +1407,7 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
             chat.scrollTop = chat.scrollHeight;
 
             try {
-                var response = await fetch(AI_BASE_URL + '/chat/completions', {
+                var response = await fetch('https://corsproxy.io/?' + encodeURIComponent(AI_BASE_URL + '/chat/completions'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
