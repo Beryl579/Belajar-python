@@ -58,7 +58,7 @@ function renderProjects(cat){
 function tryProject(idx){
   var p = pythonProjects[idx];
   if(p && p.code){
-    setCode(p.code);
     navigate("playground");
+    document.getElementById("code-editor").value = p.code;
   }
 }
