@@ -1403,10 +1403,44 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
                         ]
                     })
                 });
-                var data = await response.json();
-                var reply = data.choices && data.choices[0] ? data.choices[0].message.content : 'Tidak ada respons dari AI.';
-                var formatted = reply.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 rounded text-sm">$1</code>').replace(/\n/g, '<br>');
-                chat.innerHTML += '<div class="flex justify-start"><div class="bg-white border border-purple-200 p-3 rounded-lg max-w-[85%] shadow-sm text-sm"><p class="font-semibold text-purple-700 text-xs mb-1">PyMate Review</p>' + formatted + '</div></div>';
+                if (!response.ok) throw new Error('API error ' + response.status);
+                var reviewBody = document.createElement('div');
+                reviewBody.className = 'text-sm';
+                chat.innerHTML += '<div class="flex justify-start" id="review-result"><div class="bg-white border border-purple-200 p-3 rounded-lg max-w-[85%] shadow-sm text-sm"><p class="font-semibold text-purple-700 text-xs mb-1">PyMate Review</p><div id="review-body"></div></div></div>';
+                var bodyEl = document.getElementById('review-body');
+                var reader = response.body.getReader();
+                var decoder = new TextDecoder();
+                var fullText = '';
+                var buffer = '';
+                while (true) {
+                    var result = await reader.read();
+                    if (result.done) break;
+                    buffer += decoder.decode(result.value, {stream: true});
+                    var parts = buffer.split('\n');
+                    buffer = parts.pop();
+                    for (var i = 0; i < parts.length; i++) {
+                        var ln = parts[i];
+                        if (ln.indexOf('data: ') !== 0) continue;
+                        var js = ln.substring(6);
+                        if (js === '[DONE]') continue;
+                        try {
+                            var obj = JSON.parse(js);
+                            var d = obj.choices && obj.choices[0] && obj.choices[0].delta;
+                            if (d && d.content) {
+                                fullText += d.content;
+                                var cl = stripThinking(fullText);
+                                if (cl) bodyEl.innerHTML = cl.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 rounded text-sm">$1</code>').replace(/\n/g, '<br>');
+                                chat.scrollTop = chat.scrollHeight;
+                            }
+                        } catch(e) {}
+                    }
+                }
+                var finalReply = stripThinking(fullText).trim();
+                if (finalReply) {
+                    bodyEl.innerHTML = finalReply.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 rounded text-sm">$1</code>').replace(/\n/g, '<br>');
+                } else {
+                    bodyEl.innerHTML = 'Tidak ada respons dari AI.';
+                }
             } catch (e) {
                 chat.innerHTML += '<div class="flex justify-start"><div class="bg-red-50 border border-red-200 p-3 rounded-lg max-w-[80%] shadow-sm text-sm"><p class="font-semibold text-red-700 text-xs mb-1">Error</p>Gagal mereview kode. ' + e.message + '</div></div>';
             }
