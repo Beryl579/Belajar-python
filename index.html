@@ -1398,7 +1398,7 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         messages: [
-                            {role: 'system', content: 'You are PyMate, a Python code reviewer. Review the user code and give feedback in Bahasa Indonesia. Be concise. Do NOT show your thinking process or reasoning steps. Just give the final answer directly. Format: 1) Ringkasan kode, 2) Masalah/perbaikan, 3) Saran penulisan kode. Use HTML bold for emphasis.'},
+                            {role: 'system', content: 'You are PyMate, a Python code reviewer for Pyodide (browser Python). Review code in Bahasa Indonesia. Do NOT show thinking. Code runs in Pyodide: only print(), math, random, datetime, collections, json, re, pandas, numpy. Never use os, subprocess, open(), file I/O, network, tkinter. Format: 1) Ringkasan, 2) Masalah, 3) Saran. Use HTML bold.'},
                             {role: 'user', content: 'Review kode Python ini:\n\n' + code}
                         ]
                     })
@@ -1490,7 +1490,7 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
 
         var aiChatHistory = [{
             role: 'system',
-            content: 'PyMate: tutor Python untuk siswa Indonesia. Jawab singkat dalam Bahasa Indonesia. Fokus Python, data science, coding. Do NOT show thinking process or reasoning steps. Give direct answers only.'
+            content: 'PyMate: tutor Python untuk siswa Indonesia. Jawab singkat dalam Bahasa Indonesia. Do NOT show thinking process. Give direct answers only.\n\nIMPORTANT: Code will run in Pyodide (browser-based Python). Rules:\n- ONLY use: print(), input(), math, random, datetime, collections, itertools, json, re, string, statistics, pandas, numpy\n- NEVER use: os, subprocess, sys.exit(), open(), file I/O, network/requests, tkinter, GUI\n- No real filesystem access, no internet requests\n- Always wrap code in print() to show output\n- Always provide runnable example code'}
         }];
 
         async function sendAI() {
