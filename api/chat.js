@@ -27,6 +27,7 @@ module.exports = async (req, res) => {
                 max_tokens: 1024,
                 temperature: 0.6,
                 top_p: 0.95,
+                reasoning_effort: 'none',
                 stream: true
             })
         });
