@@ -258,13 +258,13 @@ print("Rata-rata:", sum(data)/len(data))</textarea>
                         <p class="text-gray-600">Kumpulan proyek praktis untuk belajar Python secara langsung. Pilih kategori dan mulai coding!</p>
                     </div>
                     <div class="flex flex-wrap gap-2 mb-6" id="project-filters">
-                        <button onclick="filterProjects("all")" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-py-accent text-white transition">Semua</button>
-                        <button onclick="filterProjects("data")" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">📊 Data Analysis</button>
-                        <button onclick="filterProjects("system")" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">🖥️ System Admin</button>
-                        <button onclick="filterProjects("automation")" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">⚙️ Automation</button>
-                        <button onclick="filterProjects("web")" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">🌐 Web Scraping</button>
-                        <button onclick="filterProjects("finance")" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">💰 Finance</button>
-                        <button onclick="filterProjects("file")" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">📁 File Processing</button>
+                        <button onclick="filterProjects('all')" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-py-accent text-white transition">Semua</button>
+                        <button onclick="filterProjects('data')" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">📊 Data Analysis</button>
+                        <button onclick="filterProjects('system')" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">🖥️ System Admin</button>
+                        <button onclick="filterProjects('automation')" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">⚙️ Automation</button>
+                        <button onclick="filterProjects('web')" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">🌐 Web Scraping</button>
+                        <button onclick="filterProjects('finance')" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">💰 Finance</button>
+                        <button onclick="filterProjects('file')" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">📁 File Processing</button>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="projects-grid">
                         <!-- Project cards diisi dinamis -->
@@ -1441,8 +1441,11 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
 
         // Groq API via Vercel proxy (streaming)
         function stripThinking(t) {
-            var re = new RegExp("<think>[\s\S]*?<\/think>", "g");
-            return t.replace(re, "").trim();
+            var s = t.indexOf("<think>");
+            if (s === -1) return t.trim();
+            var e = t.indexOf("</think>", s);
+            if (e === -1) return t.substring(s + 7).trim();
+            return (t.substring(0, s) + t.substring(e + 8)).trim();
         }
 
         function formatReply(t) {
@@ -1495,8 +1498,7 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
                     var result = await reader.read();
                     if (result.done) break;
                     buffer += decoder.decode(result.value, {stream: true});
-                    var parts = buffer.split("
-");
+                    var parts = buffer.split("\n");
                     buffer = parts.pop();
                     for (var i = 0; i < parts.length; i++) {
                         var ln = parts[i];
