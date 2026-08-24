@@ -1,1 +1,3 @@
-(index.html is a source file, so no need to add anything to .gitignore)
+.vercel
+.env
+node_modules/

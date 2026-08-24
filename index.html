@@ -245,14 +245,27 @@ print("Rata-rata:", sum(data)/len(data))</textarea>
                 <div class="mb-6">
                     <h2 class="text-2xl sm:text-3xl font-bold mb-2">📄 Cheat Sheet & Syntax Reference</h2>
                     <p class="text-gray-600">Referensi cepat syntax Python untuk memudahkan coding Anda.</p>
+    
+                <!-- KUMPULAN PROYEK PYTHON -->
+                <div class="mt-10" id="projects-section">
+                    <div class="mb-6">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2">🚀 Kumpulan Proyek Python</h2>
+                        <p class="text-gray-600">Kumpulan proyek praktis untuk belajar Python secara langsung. Pilih kategori dan mulai coding!</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-6" id="project-filters">
+                        <button onclick="filterProjects("all")" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-py-accent text-white transition">Semua</button>
+                        <button onclick="filterProjects("data")" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">📊 Data Analysis</button>
+                        <button onclick="filterProjects("system")" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">🖥️ System Admin</button>
+                        <button onclick="filterProjects("automation")" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">⚙️ Automation</button>
+                        <button onclick="filterProjects("web")" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">🌐 Web Scraping</button>
+                        <button onclick="filterProjects("finance")" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">💰 Finance</button>
+                        <button onclick="filterProjects("file")" class="project-filter-btn px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition">📁 File Processing</button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="projects-grid">
+                        <!-- Project cards diisi dinamis -->
+                    </div>
                 </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="cheatsheet-content">
-                    <!-- Cheat sheet cards diisi dinamis -->
-                </div>
-            </div>
-
-            <!-- VIEW: UJIAN AKHIR -->
+            </div>             <!-- VIEW: UJIAN AKHIR -->
             <div id="view-exam" class="view hidden p-8 max-w-4xl mx-auto">
                 <div class="mb-6">
                     <h2 class="text-2xl sm:text-3xl font-bold mb-2">📝 Ujian Akhir</h2>
@@ -1183,7 +1196,7 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
                 renderVideos();
             } else if (view === 'cheatsheet') {
                 document.getElementById('view-cheatsheet').classList.remove('hidden');
-                renderCheatsheet();
+                renderCheatsheet(); renderProjects("all");
             } else if (view === 'exam') {
                 document.getElementById('view-exam').classList.remove('hidden');
                 renderExamHistory();
@@ -1421,78 +1434,95 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
             document.getElementById('ai-window').classList.toggle('hidden');
         }
 
-                // xKiro API Configuration
-        // API key is now on server side (Vercel serverless function)
-        
-        
-        
-        // Chat history for context
-        var aiChatHistory = [
-            {role: 'system', content: 'You are PyMate, a friendly Python tutor for Indonesian students. Answer in Bahasa Indonesia when appropriate. Be concise and helpful about Python programming, data science, and coding best practices.'}
-        ];
-        
+        // Groq API via Vercel proxy (streaming)
+        function stripThinking(t) {
+            var re = new RegExp("<think>[\s\S]*?<\/think>", "g");
+            return t.replace(re, "").trim();
+        }
+
+        function formatReply(t) {
+            t = t.replace(/\*\*(.*?)\*\*/g, '<b>\1</b>');
+            t = t.replace(/\n/g, '<br>');
+            return t;
+        }
+
+        var aiChatHistory = [{
+            role: 'system',
+            content: 'PyMate: tutor Python untuk siswa Indonesia. Jawab singkat dalam Bahasa Indonesia. Fokus Python, data science, coding.'
+        }];
+
         async function sendAI() {
             var input = document.getElementById('ai-input');
             var chat = document.getElementById('ai-chat');
             var text = input.value.trim();
             if (!text) return;
 
-            // Show user message
-            chat.innerHTML += '<div class="flex justify-end"><div class="bg-py-accent text-white p-3 rounded-lg max-w-[80%]">' + text + '</div></div>';
+            var ud = document.createElement('div');
+            ud.className = 'flex justify-end';
+            ud.innerHTML = '<div class="bg-py-accent text-white p-3 rounded-lg max-w-[80%]">' + text + '</div>';
+            chat.appendChild(ud);
             input.value = '';
             chat.scrollTop = chat.scrollHeight;
 
-            // Add user message to history
             aiChatHistory.push({role: 'user', content: text});
 
-            // Show loading
-            var loadingId = 'loading-' + Date.now();
-            chat.innerHTML += '<div class="flex justify-start" id="' + loadingId + '"><div class="bg-white border border-gray-200 p-3 rounded-lg max-w-[80%] shadow-sm"><p class="font-semibold text-py-accent text-xs">PyMate</p><p class="text-sm text-gray-500 animate-pulse">Mengetik...</p></div></div>';
+            var msgId = 'msg-' + Date.now();
+            var md = document.createElement('div');
+            md.id = msgId;
+            md.className = 'flex justify-start';
+            md.innerHTML = '<div class="bg-white border border-gray-200 p-3 rounded-lg max-w-[80%] shadow-sm"><p class="font-semibold text-py-accent text-xs">PyMate</p><div class="text-sm" id="' + msgId + '-body"><span class="text-gray-400 animate-pulse">Mengetik...</span></div></div>';
+            chat.appendChild(md);
             chat.scrollTop = chat.scrollHeight;
 
             try {
-                var response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        messages: aiChatHistory.slice(-10)
-                    })
+                var response = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({messages: aiChatHistory.slice(-8)})
                 });
-
-                var data = await response.json();
-                
-                // Remove loading
-                var loadingEl = document.getElementById(loadingId);
-                if (loadingEl) loadingEl.remove();
-
-                if (data.choices && data.choices[0]) {
-                    var reply = data.choices[0].message.content;
-                    aiChatHistory.push({role: 'assistant', content: reply});
-                    
-                    // Format reply
-                    var formattedReply = reply
-                        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-                        .replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 rounded text-sm">$1</code>')
-                        .replace(/\n/g, '<br>');
-                    
-                    chat.innerHTML += '<div class="flex justify-start"><div class="bg-white border border-gray-200 p-3 rounded-lg max-w-[80%] shadow-sm"><p class="font-semibold text-py-accent text-xs">PyMate</p><div class="text-sm">' + formattedReply + '</div></div></div>';
+                if (!response.ok) throw new Error("API error " + response.status);
+                var bodyEl = document.getElementById(msgId + "-body");
+                var reader = response.body.getReader();
+                var decoder = new TextDecoder();
+                var fullText = "";
+                var buffer = "";
+                while (true) {
+                    var result = await reader.read();
+                    if (result.done) break;
+                    buffer += decoder.decode(result.value, {stream: true});
+                    var parts = buffer.split("\\n");
+                    buffer = parts.pop();
+                    for (var i = 0; i < parts.length; i++) {
+                        var ln = parts[i];
+                        if (ln.indexOf("data: ") !== 0) continue;
+                        var js = ln.substring(6);
+                        if (js === "[DONE]") continue;
+                        try {
+                            var obj = JSON.parse(js);
+                            var d = obj.choices && obj.choices[0] && obj.choices[0].delta;
+                            if (d && d.content) {
+                                fullText += d.content;
+                                var cl = stripThinking(fullText);
+                                if (cl) bodyEl.innerHTML = formatReply(cl);
+                                chat.scrollTop = chat.scrollHeight;
+                            }
+                        } catch(e) {}
+                    }
+                }
+                var ft = stripThinking(fullText).trim();
+                if (ft) {
+                    bodyEl.innerHTML = formatReply(ft);
+                    aiChatHistory.push({role: "assistant", content: ft});
                 } else {
-                    throw new Error('No response from API');
+                    bodyEl.innerHTML = "Maaf, tidak ada jawaban.";
                 }
             } catch (error) {
-                // Remove loading
-                var loadingEl = document.getElementById(loadingId);
-                if (loadingEl) loadingEl.remove();
-                
-                // Fallback to helpful message
-                var reply = 'Error: ' + error.message + '. Jika ini masalah CORS, coba buka di browser lain atau matikan CORS extension.';
-                chat.innerHTML += '<div class="flex justify-start"><div class="bg-white border border-gray-200 p-3 rounded-lg max-w-[80%] shadow-sm"><p class="font-semibold text-py-accent text-xs">PyMate</p>' + reply + '</div></div>';
+                var er = document.getElementById(msgId + "-body");
+                if (er) er.innerHTML = "Error: " + error.message;
             }
-            
             chat.scrollTop = chat.scrollHeight;
         }
+
 
         function toggleMobileMenu() {
             const sidebar = document.getElementById('sidebar');
@@ -2040,5 +2070,6 @@ with open("data.csv") as f:
         renderSidebarModules();
         updateStats();
     </script>
+<script src="projects.js"></script>
 </body>
 </html>
