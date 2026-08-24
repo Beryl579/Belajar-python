@@ -1495,7 +1495,8 @@ print("Catatan: Plot tidak tampil di browser, jalankan di Jupyter/VS Code untuk 
                     var result = await reader.read();
                     if (result.done) break;
                     buffer += decoder.decode(result.value, {stream: true});
-                    var parts = buffer.split("\\n");
+                    var parts = buffer.split("
+");
                     buffer = parts.pop();
                     for (var i = 0; i < parts.length; i++) {
                         var ln = parts[i];
